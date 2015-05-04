@@ -1,3 +1,7 @@
+网页动画框架介绍：
+http://www.ui.cn/detail/16348.html
+
+
 scroll page framework:
 skrollr
 scrollmagic
@@ -6,3 +10,11 @@ anime framework:
 tweenmax
 tweenlite
 tweennano
+
+agile使用JS生成纯CSS3代码，无html canvas,无webGL，无SVG。在移动端Agile的表现力极佳！
+
+hammer.js主要针对触屏的6大事件进行监听
+
+
+demo地址：
+http://thy09.github.io/pages/animation/slide.html
