@@ -34,20 +34,22 @@
       _loadedScene:0,
       _playedScene:0,
       _config:{},
+      _scene:{},
       _init: function (){
         this.mix(this, initRequestAnimationFrame());
       },
+      fc: function (){},
       config: function (config){
-        this.mix(this._config, config);
+      this.mix(this._config, config);
       },
       getScript: function(src, func) {
-          var script = document.createElement('script');
-          script.async = "async";
-          script.src = src;
-          if (func) {
-             script.onload = func;
-          }
-          document.getElementsByTagName("head")[0].appendChild(script);
+        var script = document.createElement('script');
+        script.async = "async";
+        script.src = src;
+        if (func) {
+           script.onload = func;
+        }
+        document.getElementsByTagName("head")[0].appendChild(script);
       },
       mix: function (a,b){
         $.each(b, function (k,v){
@@ -57,10 +59,12 @@
       start: function (){
         this._loadScene();
       },
-      addScene: function (anime){
+      addScene: function (scene){
         var that = this;
+        this._scene[this._loadedScene++] = scene;
         this._animeQueue[this._loadedScene++] = function (){
-          anime($.proxy(that.playNext, that));
+        //anime($.proxy(that.playNext, that));
+          scene.anime(that.fc);
         };
         if(this._currentScene == 0){
           this.playNext();
@@ -72,17 +76,32 @@
           return;
         }
         var fileName = this._config.senceQueue[this._loadedScene].fileName;
-        this.getScript(location.origin + this._config.baseUrl+fileName,function(data){
+        var loc = location.href.substring(0,location.href.lastIndexOf('/'));
+        
+        var url = loc + this._config.baseUrl+fileName;
+        this.getScript(url,function(data){
           
         })
       },
       playNext: function (){
+        var that = this;
         if(this._currentScene >= this._playedScene){
           this._playedScene = this._currentScene + 1;
         }
         
         var fn = this._animeQueue[this._currentScene++];
         fn && fn();
+        if(this.scene){
+          this.scene.animate({
+            opacity: 0.25, left: '50px', rotateZ: '45deg', color: '#abcdef'
+          }, 2, 'ease-out')
+        }
+        var scene = this.scene = $('<div class="scene">');
+        $('body').append(scene);
+        scene.on('click', function (){
+          that.playNext();
+        })
+        $("body").html(scene);
         this._loadScene();
       }
     };

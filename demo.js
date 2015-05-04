@@ -1,7 +1,7 @@
 ;require(['anole'], function (anole){
   var senceQueue = [
     {
-      fileName:'scene1.js'
+      fileName:'scene1.js',
     },
     {
       fileName:'scene2.js'
