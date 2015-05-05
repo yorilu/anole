@@ -1,7 +1,6 @@
 ;define(['zepto'], function (zepto){
   var anole = window.anole || {};
     
-    
     function initRequestAnimationFrame(){
       //use function setTimeout if requestAnimationFrame is not available
       var lastTime = 0;
@@ -72,16 +71,26 @@
       },
       _loadScene: function (){
         var that = this;
-        if(this._loadedScene > this._config.senceQueue.length -1){
+        if(this._loadedScene > this._config.sceneQueue.length -1){
           return;
         }
-        var fileName = this._config.senceQueue[this._loadedScene].fileName;
+        var fileName = this._config.sceneQueue[this._loadedScene].fileName;
         var loc = location.href.substring(0,location.href.lastIndexOf('/'));
         
         var url = loc + this._config.baseUrl+fileName;
         this.getScript(url,function(data){
           
         })
+      },
+      isMobile: function() {
+        if (/(iPhone|iPod|Android|ios|SymbianOS)/i.test(navigator.userAgent)){
+            return true;
+        }else{
+          return false
+        }
+      },
+      playPrev: function (){
+        
       },
       playNext: function (){
         var that = this;
@@ -91,11 +100,6 @@
         
         var fn = this._animeQueue[this._currentScene++];
         fn && fn();
-        if(this.scene){
-          this.scene.animate({
-            opacity: 0.25, left: '50px', rotateZ: '45deg', color: '#abcdef'
-          }, 2, 'ease-out')
-        }
         var scene = this.scene = $('<div class="scene">');
         $('body').append(scene);
         scene.on('click', function (){
@@ -103,6 +107,12 @@
         })
         $("body").html(scene);
         this._loadScene();
+      },
+      playMusic: function (){
+        //todo
+      },
+      playVideo: function (){
+        //todo
       }
     };
     

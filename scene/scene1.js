@@ -1,6 +1,6 @@
 ;require(['anole', 'zepto'], function (anole){
   
-  var template = "<div>";
+  var sceneHandler = $("<div>");
   
   anole.addScene({
     anime:function(finish){
@@ -10,6 +10,15 @@
         finish();
       },1000); 
     },
-    template: template
+    sceneHandler: sceneHandler,
+    onInit: function (){
+      
+    },
+    onStart: function (){
+      
+    },
+    onEnd: function (){
+      
+    }
   })
 });

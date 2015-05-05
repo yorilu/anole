@@ -1,26 +1,33 @@
 ;require(['anole'], function (anole){
-  var senceQueue = [
-    {
-      fileName:'scene1.js',
-    },
-    {
-      fileName:'scene2.js'
-    },
-    {
-      fileName:'scene3.js'
-    },
-    {
-      fileName:'scene4.js'
-    },
-    {
-      fileName:'scene5.js'
-    }
-  ]
-    
+  var sceneQueue;
+  var baseUrl;
+  if(!anole.isMobile()){
+    sceneQueue = [
+      {
+        fileName:'scene1.js',
+      },
+      {
+        fileName:'scene2.js'
+      },
+      {
+        fileName:'scene3.js'
+      },
+      {
+        fileName:'scene4.js'
+      },
+      {
+        fileName:'scene5.js'
+      }
+    ]
+    baseUrl = '/scene/';
+  }
+
   anole.config({
-    baseUrl:'/scene/',
+    baseUrl:baseUrl,
     maxQueueLength: 2,
-    senceQueue: senceQueue
+    sceneQueue: sceneQueue,
+    autoPlay: false,
+    flipType: 'click'//click, scroll
   })
   
   anole.start();
