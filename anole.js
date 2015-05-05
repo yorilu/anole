@@ -28,18 +28,18 @@
     }
     
     anole= {
-      _animeQueue: {},
       _currentScene: 0,
       _loadedScene:0,
       _playedScene:0,
       _config:{},
       _scene:{},
+      _playFirst: false,
       _init: function (){
         this.mix(this, initRequestAnimationFrame());
       },
       fc: function (){},
       config: function (config){
-      this.mix(this._config, config);
+        this.mix(this._config, config);
       },
       getScript: function(src, func) {
         var script = document.createElement('script');
@@ -56,17 +56,27 @@
         })
       },
       start: function (){
+        var that = this;
         this._loadScene();
+        
+        if(this._config.flipType == 'click'){
+          var prevBtn = this._prevBtn = $(this._config.prevBtnTemplate);
+          var nextBtn = this._nextBtn =  $(this._config.nextBtnTemplate);
+          $('body').append(prevBtn).append(nextBtn);
+          prevBtn.on('click', function (){
+            that.playPrev();
+          })
+          nextBtn.on('click', function (){
+            that.playNext();
+          })
+        }
       },
       addScene: function (scene){
         var that = this;
         this._scene[this._loadedScene++] = scene;
-        this._animeQueue[this._loadedScene++] = function (){
-        //anime($.proxy(that.playNext, that));
-          scene.anime(that.fc);
-        };
-        if(this._currentScene == 0){
-          this.playNext();
+        if(!this._playFirst){
+          this._playFirst = true;
+          this.playScene(0);
         }
       },
       _loadScene: function (){
@@ -90,23 +100,49 @@
         }
       },
       playPrev: function (){
-        
+        if(!this._currentScene){
+          return;
+        }
+        this.playScene(--this._currentScene);
       },
       playNext: function (){
         var that = this;
+        if(this._currentScene > this._loadedScene -1){
+            return;
+        }
+        
         if(this._currentScene >= this._playedScene){
           this._playedScene = this._currentScene + 1;
         }
+        this.playScene(++this._currentScene);
+      },
+      playScene: function (index){
+        var that = this;
+        var scene = this._scene[index];
         
-        var fn = this._animeQueue[this._currentScene++];
-        fn && fn();
-        var scene = this.scene = $('<div class="scene">');
-        $('body').append(scene);
-        scene.on('click', function (){
+        var sceneHandler = scene.sceneHandler;
+        $(".J_Container").html(sceneHandler);
+        
+        scene.onInit && scene.onInit();//初始化场景
+        if(this._config.autoPlay){     //是否是自动播放
+          scene.onStart && scene.onStart(function (){
+            scene.onEnd && scene.onEnd();
+            that.playNext();//如果是自动播放，则finish直接调用 playNext
+          });
+        }else{
+          scene.onStart && scene.onStart(function (){
+            scene.onEnd && scene.onEnd();
+          });
+        }
+        
+        /*
+        sceneHandler.on('click', function (){
+          scene.onEnd && scene.onEnd();
           that.playNext();
         })
-        $("body").html(scene);
-        this._loadScene();
+        */
+        
+        this._loadScene();//播放同时加载下一个场景
       },
       playMusic: function (){
         //todo
