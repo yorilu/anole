@@ -28,6 +28,7 @@
     sceneQueue: sceneQueue,//场景队列
     autoPlay: false,//自动播放
     flipType: 'click',//翻页方式 click, scroll
+    containerTemplate: '<div class="container"></div>',//场景根容器
     prevBtnTemplate: '<div class="prev-btn btn J_PrevBtn">prev</div>',//向上翻页按钮
     nextBtnTemplate: '<div class="next-btn btn J_NextBtn">next</div>'//向下翻页按钮
   })

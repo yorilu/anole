@@ -34,6 +34,7 @@
       _config:{},
       _scene:{},
       _playFirst: false,
+      _root: null,
       _init: function (){
         this.mix(this, initRequestAnimationFrame());
       },
@@ -58,6 +59,9 @@
       start: function (){
         var that = this;
         this._loadScene();
+        
+        var _root = this._root = $(this._config.containerTemplate);
+        $('body').append(_root);
         
         if(this._config.flipType == 'click'){
           var prevBtn = this._prevBtn = $(this._config.prevBtnTemplate);
@@ -121,7 +125,7 @@
         var scene = this._scene[index];
         
         var sceneHandler = scene.sceneHandler;
-        $(".J_Container").html(sceneHandler);
+        this._root.html(sceneHandler);
         
         scene.onInit && scene.onInit();//初始化场景
         if(this._config.autoPlay){     //是否是自动播放
