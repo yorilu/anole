@@ -1,32 +1,25 @@
 ;define(['zepto'], function (zepto){
   var anole = window.anole || {};
-    
-    function initRequestAnimationFrame(){
-      //use function setTimeout if requestAnimationFrame is not available
-      var lastTime = 0;
-      var vendors = ['ms', 'moz', 'webkit', 'o'];
-      for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-          window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-          window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
-      }
-      if (!window.requestAnimationFrame) window.requestAnimationFrame = function(callback, element) {
-          var currTime = new Date().getTime();
-          var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-          var id = window.setTimeout(function() {
-              callback(currTime + timeToCall);
-          }, timeToCall);
-          lastTime = currTime + timeToCall;
-          return id;
-      };
-      if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function(id) {
-          clearTimeout(id);
-      };
+  
+    var hold = (function (){
+      var $fragment = $("<fragment>");
+      
       return {
-        requestAnimationFrame: window.requestAnimationFrame,
-        cancelAnimationFrame: window.cancelAnimationFrame
+        add: function (dom){
+          $(dom).appendTo($fragment);
+        },
+        get: function (string){
+          return $fragment.find(string);
+        },
+        getAll: function (){
+          return $fragment;
+        },
+        clean: function (){
+          $fragment.html("");
+        }
       }
-    }
-    
+    })()
+  
     anole= {
       _currentScene: 0,
       _loadedScene:0,
@@ -35,8 +28,9 @@
       _scene:{},
       _root: null, // root container
       _init: function (){
-        this.mix(this, initRequestAnimationFrame());
+        
       },
+      hold: hold,
       fc: function (){},
       config: function (config){
         this.mix(this._config, config);
@@ -99,6 +93,7 @@
         if(!this._currentScene){
           return;
         }
+        this.triggerEnd(this._currentScene)
         this.playScene(--this._currentScene);
       },
       playNext: function (){
@@ -109,7 +104,12 @@
         if(this._currentScene >= this._playedScene){
           this._playedScene = this._currentScene + 1;
         }
+        this.triggerEnd(this._currentScene)
         this.playScene(++this._currentScene);
+      },
+      triggerEnd: function (index){
+        var scene = this._scene[index];
+        scene.onEnd && scene.onEnd();
       },
       playScene: function (index){
         var scene = this._scene[index];
@@ -120,24 +120,19 @@
         scene.onInit && scene.onInit();//init scene
         if(this._config.autoPlay){     //autoplay
           scene.onStart && scene.onStart(function (){
-          scene.onEnd && scene.onEnd();
-          // auto play next scene if config.autoPlay is true
-          this.playNext.bind(this)();
-          });
+            // auto play next scene if config.autoPlay is true
+            this.playNext();
+          }.bind(this));
         }else{
           scene.onStart && scene.onStart(function (){
-            scene.onEnd && scene.onEnd();
+            
           });
         }
-        
-        /*
-        sceneHandler.on('click', function (){
-          scene.onEnd && scene.onEnd();
-          that.playNext();
-        })
-        */
-        
+
         this._loadScene();//load next scene when playing current scene
+      },
+      clearCanvas: function (){
+        this._root.html("");
       },
       playMusic: function (){
         //todo

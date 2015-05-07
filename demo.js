@@ -4,7 +4,7 @@
   if(!anole.isMobile()){
     sceneQueue = [
       {
-        fileName:'scene1.js',
+        fileName:'scene1.js'
       },
       {
         fileName:'scene2.js'
@@ -19,18 +19,18 @@
         fileName:'scene5.js'
       }
     ]
-    baseUrl = '/scene/';
+    baseUrl = './scene/';
   }
 
   anole.config({
-    baseUrl:baseUrl,//场景的根目录
-    maxQueueLength: 2,//TODO 最大加载场景数
-    sceneQueue: sceneQueue,//场景队列
-    autoPlay: false,//自动播放
-    flipType: 'click',//翻页方式 click, scroll
-    containerTemplate: '<div class="container"></div>',//场景根容器
-    prevBtnTemplate: '<div class="prev-btn btn J_PrevBtn">prev</div>',//向上翻页按钮
-    nextBtnTemplate: '<div class="next-btn btn J_NextBtn">next</div>'//向下翻页按钮
+    baseUrl:baseUrl,// root url 
+    maxQueueLength: 2,//TODO load serval scenes at same time
+    sceneQueue: sceneQueue,//anime scene queue
+    autoPlay: false,//auto play with no event
+    flipType: 'click',//flip type eg:click, scroll
+    containerTemplate: '<div class="container"></div>',//scene root container
+    prevBtnTemplate: '<div class="prev-btn btn J_PrevBtn">prev</div>',//prev button dom
+    nextBtnTemplate: '<div class="next-btn btn J_NextBtn">next</div>'//next button dom
   })
   
   anole.start();

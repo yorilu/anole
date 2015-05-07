@@ -1,12 +1,10 @@
 ;require(['anole', 'zepto'], function (anole){
   var sceneHandler = $('<div class="scene scene1">');
-  
-  sceneHandler.html("<h1>1</h1>")
-  
+
   anole.addScene({
     sceneHandler: sceneHandler,
     onInit: function (){
-      
+      sceneHandler.html("<h1>1</h1>")
     },
     onStart: function (finish){
       console.log("scene1 playing");
@@ -16,7 +14,8 @@
       },1000); 
     },
     onEnd: function (){
-     
+      var h1 = sceneHandler.find("h1");
+      anole.hold.add(h1);
     }
   })
 });
