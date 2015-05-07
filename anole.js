@@ -90,7 +90,7 @@
       },
       isMobile: function() {
         if (/(iPhone|iPod|Android|ios|SymbianOS)/i.test(navigator.userAgent)){
-            return true;
+          return true;
         }else{
           return false
         }
