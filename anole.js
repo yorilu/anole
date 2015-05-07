@@ -34,7 +34,7 @@
       _config:{},
       _scene:{},
       _playFirst: false,
-      _root: null,
+      _root: null, // TODO: What is _root?
       _init: function (){
         this.mix(this, initRequestAnimationFrame());
       },
@@ -49,15 +49,18 @@
         if (func) {
            script.onload = func;
         }
+		// TODO: Load scripts to the bottom of body.
         document.getElementsByTagName("head")[0].appendChild(script);
       },
+	  // TODO: mix: attach b's key-value pairs to a as properties. (right?)
       mix: function (a,b){
         $.each(b, function (k,v){
           a[k]=v;
         })
       },
       start: function (){
-        var that = this;
+        // Don't use that=this, use function binding instead.
+		// var that = this;
         this._loadScene();
         
         var _root = this._root = $(this._config.containerTemplate);
@@ -67,16 +70,12 @@
           var prevBtn = this._prevBtn = $(this._config.prevBtnTemplate);
           var nextBtn = this._nextBtn =  $(this._config.nextBtnTemplate);
           $('body').append(prevBtn).append(nextBtn);
-          prevBtn.on('click', function (){
-            that.playPrev();
-          })
-          nextBtn.on('click', function (){
-            that.playNext();
-          })
+          prevBtn.on('click', this.playPrev.bind(this));
+          nextBtn.on('click', this.playNext.bind(this));
         }
       },
       addScene: function (scene){
-        var that = this;
+        // var that = this;
         this._scene[this._loadedScene++] = scene;
         if(!this._playFirst){
           this._playFirst = true;
@@ -84,7 +83,7 @@
         }
       },
       _loadScene: function (){
-        var that = this;
+        // var that = this;
         if(this._loadedScene > this._config.sceneQueue.length -1){
           return;
         }
@@ -110,7 +109,7 @@
         this.playScene(--this._currentScene);
       },
       playNext: function (){
-        var that = this;
+        // var that = this;
         if(this._currentScene > this._loadedScene -1){
             return;
         }
@@ -121,7 +120,7 @@
         this.playScene(++this._currentScene);
       },
       playScene: function (index){
-        var that = this;
+        // var that = this;
         var scene = this._scene[index];
         
         var sceneHandler = scene.sceneHandler;
@@ -131,8 +130,15 @@
         if(this._config.autoPlay){     //是否是自动播放
           scene.onStart && scene.onStart(function (){
             scene.onEnd && scene.onEnd();
-            that.playNext();//如果是自动播放，则finish直接调用 playNext
-          });
+            // that.playNext();
+			// 如果是自动播放，则finish直接调用 playNext
+			// use bind instead
+			this.playNext.bind(this)();
+			// Or use anonymous function. 
+			/*(function(){
+				this.playNext();
+			}());*/
+		  });
         }else{
           scene.onStart && scene.onStart(function (){
             scene.onEnd && scene.onEnd();
