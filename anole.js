@@ -33,8 +33,7 @@
       _playedScene:0,
       _config:{},
       _scene:{},
-      _playFirst: false,
-      _root: null, // TODO: What is _root?
+      _root: null, // root container
       _init: function (){
         this.mix(this, initRequestAnimationFrame());
       },
@@ -49,20 +48,16 @@
         if (func) {
            script.onload = func;
         }
-		// TODO: Load scripts to the bottom of body.
-        document.getElementsByTagName("head")[0].appendChild(script);
+        //Load scripts to the bottom of body.
+        document.getElementsByTagName("body")[0].appendChild(script);
       },
-	  // TODO: mix: attach b's key-value pairs to a as properties. (right?)
+      // attach b's key-value pairs to a as properties.
       mix: function (a,b){
         $.each(b, function (k,v){
           a[k]=v;
         })
       },
       start: function (){
-        // Don't use that=this, use function binding instead.
-		// var that = this;
-        this._loadScene();
-        
         var _root = this._root = $(this._config.containerTemplate);
         $('body').append(_root);
         
@@ -73,27 +68,25 @@
           prevBtn.on('click', this.playPrev.bind(this));
           nextBtn.on('click', this.playNext.bind(this));
         }
+        
+        this._loadScene();
       },
       addScene: function (scene){
-        // var that = this;
-        this._scene[this._loadedScene++] = scene;
-        if(!this._playFirst){
-          this._playFirst = true;
+        this._scene[this._loadedScene-1] = scene;
+        if(this._loadedScene==1){
           this.playScene(0);
         }
       },
       _loadScene: function (){
-        // var that = this;
+        var that = this;
         if(this._loadedScene > this._config.sceneQueue.length -1){
           return;
         }
         var fileName = this._config.sceneQueue[this._loadedScene].fileName;
-        var loc = location.href.substring(0,location.href.lastIndexOf('/'));
-        
-        var url = loc + this._config.baseUrl+fileName;
+        var url = this._config.baseUrl+fileName;
         this.getScript(url,function(data){
-          
-        })
+          this._loadedScene++
+        }.bind(this));
       },
       isMobile: function() {
         if (/(iPhone|iPod|Android|ios|SymbianOS)/i.test(navigator.userAgent)){
@@ -109,7 +102,6 @@
         this.playScene(--this._currentScene);
       },
       playNext: function (){
-        // var that = this;
         if(this._currentScene > this._loadedScene -1){
             return;
         }
@@ -120,25 +112,18 @@
         this.playScene(++this._currentScene);
       },
       playScene: function (index){
-        // var that = this;
         var scene = this._scene[index];
         
         var sceneHandler = scene.sceneHandler;
         this._root.html(sceneHandler);
         
-        scene.onInit && scene.onInit();//初始化场景
-        if(this._config.autoPlay){     //是否是自动播放
+        scene.onInit && scene.onInit();//init scene
+        if(this._config.autoPlay){     //autoplay
           scene.onStart && scene.onStart(function (){
-            scene.onEnd && scene.onEnd();
-            // that.playNext();
-			// 如果是自动播放，则finish直接调用 playNext
-			// use bind instead
-			this.playNext.bind(this)();
-			// Or use anonymous function. 
-			/*(function(){
-				this.playNext();
-			}());*/
-		  });
+          scene.onEnd && scene.onEnd();
+          // auto play next scene if config.autoPlay is true
+          this.playNext.bind(this)();
+          });
         }else{
           scene.onStart && scene.onStart(function (){
             scene.onEnd && scene.onEnd();
@@ -152,7 +137,7 @@
         })
         */
         
-        this._loadScene();//播放同时加载下一个场景
+        this._loadScene();//load next scene when playing current scene
       },
       playMusic: function (){
         //todo
