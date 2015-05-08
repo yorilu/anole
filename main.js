@@ -2,7 +2,8 @@
   baseUrl: './',
   paths: {
     'anole': 'anole',
-	'demo': 'demo'
+	  'demo': 'demo',
+    'hammer': 'hammer'
   },
   shim: {
     zepto: {

@@ -1,4 +1,4 @@
-;define(['zepto'], function (zepto){
+;define(['zepto', 'hammer'], function (zepto, Hammer){
   var anole = window.anole || {};
   
     var hold = (function (){
@@ -28,7 +28,29 @@
       _scene:{},
       _root: null, // root container
       _init: function (){
+        var _root = this._root = $(this._config.containerTemplate);
+        $('body').append(_root);
         
+        if(this._config.flipType == 'click'){
+          var prevBtn = this._prevBtn = $(this._config.prevBtnTemplate);
+          var nextBtn = this._nextBtn =  $(this._config.nextBtnTemplate);
+          $('body').append(prevBtn).append(nextBtn);
+          prevBtn.on('click', this.playPrev.bind(this));
+          nextBtn.on('click', this.playNext.bind(this));
+        }else if(this._config.flipType == 'swipe'){
+          var hammer = new Hammer(_root[0]);
+          hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+          hammer.on('swipe', function(ev) {
+              var d = ev.offsetDirection;
+              if(d == 2 || d == 8){
+                this.playPrev();
+              }else{
+                this.playNext();
+              }
+          }.bind(this));
+        }
+        
+        this._loadScene();
       },
       hold: hold,
       fc: function (){},
@@ -52,18 +74,7 @@
         })
       },
       start: function (){
-        var _root = this._root = $(this._config.containerTemplate);
-        $('body').append(_root);
-        
-        if(this._config.flipType == 'click'){
-          var prevBtn = this._prevBtn = $(this._config.prevBtnTemplate);
-          var nextBtn = this._nextBtn =  $(this._config.nextBtnTemplate);
-          $('body').append(prevBtn).append(nextBtn);
-          prevBtn.on('click', this.playPrev.bind(this));
-          nextBtn.on('click', this.playNext.bind(this));
-        }
-        
-        this._loadScene();
+        this._init();
       },
       addScene: function (scene){
         this._scene[this._loadedScene-1] = scene;
@@ -97,7 +108,7 @@
         this.playScene(--this._currentScene);
       },
       playNext: function (){
-        if(this._currentScene > this._loadedScene -1){
+        if(this._currentScene +1 > this._loadedScene -1){
             return;
         }
         
@@ -141,8 +152,6 @@
         //todo
       }
     };
-    
-    anole._init();
     
     return anole;
 });
