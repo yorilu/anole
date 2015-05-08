@@ -104,8 +104,7 @@
         if(!this._currentScene){
           return;
         }
-        this.triggerEnd(this._currentScene)
-        this.playScene(--this._currentScene);
+        this.triggerBack(this._currentScene)
       },
       playNext: function (){
         if(this._currentScene +1 > this._loadedScene -1){
@@ -117,6 +116,17 @@
         }
         this.triggerEnd(this._currentScene)
         this.playScene(++this._currentScene);
+      },
+      triggerBack:function (index){
+        var scene = this._scene[index];
+        if(scene.onBack){
+          scene.onBack(function (){
+            this.triggerEnd(index);
+            this.playScene(--this._currentScene);
+          }.bind(this));
+        }else{
+          this.triggerEnd(index);
+        }
       },
       triggerEnd: function (index){
         var scene = this._scene[index];
