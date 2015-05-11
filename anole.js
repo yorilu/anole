@@ -27,6 +27,7 @@
       _config:{},
       _scene:{},
       _root: null, // root container
+      _resourceLoaded: {},
       _init: function (){
         var _root = this._root = $(this._config.containerTemplate);
         $('body').append(_root);
@@ -52,10 +53,19 @@
         
         this._loadScene();
       },
+      showLoading: function (){/* abstract */}, // it will be triggered when loading the resource of current scene 
+      hideLoading: function (){/* abstract */},// it will be triggered when resource loaded finished
+      showError: function (){/* abstract */}, // it will be triggered when resource error
       hold: hold,
       fc: function (){},
       config: function (config){
-        this.mix(this._config, config);
+        $.each(config, function (k,v){
+          if($.isFunction(v)){
+            this[k]=v;
+          }else{
+            this._config[k]=v;
+          }
+        }.bind(this));
       },
       getScript: function(src, func) {
         var script = document.createElement('script');
@@ -65,7 +75,7 @@
            script.onload = func;
         }
         //Load scripts to the bottom of body.
-        document.getElementsByTagName("body")[0].appendChild(script);
+        document.body.appendChild(script);
       },
       // attach b's key-value pairs to a as properties.
       mix: function (a,b){
@@ -87,11 +97,52 @@
         if(this._loadedScene > this._config.sceneQueue.length -1){
           return;
         }
-        var fileName = this._config.sceneQueue[this._loadedScene].fileName;
+        
+        var nextScene = this._config.sceneQueue[this._loadedScene];
+        var fileName = nextScene.fileName;
+        var res = nextScene.res;
+        
+        if(this._currentScene == this._loadedScene){
+          this.showLoading();
+        }
+        
+        //TODO load resource and scene at the same time; 
+        res && this._loadResource(res, function (){
+          this.hideLoading();
+        }.bind(this));
+        
         var url = this._config.baseUrl+fileName;
         this.getScript(url,function(data){
           this._loadedScene++
         }.bind(this));
+      },
+      _loadResource: function (res, callback){
+        function loadNext(){
+          this._loadOneResource(res.pop(), function (){
+            if(res.length){
+              loadNext.bind(this)();
+              callback && callback();
+            }
+          }.bind(this))
+        };
+        
+        loadNext.bind(this)();
+      },
+      _loadOneResource: function (res, callback){
+        var src = this._config.resoureUrl + this._config.resource[res];
+        var img = document.createElement("img");
+        img.src = src;
+        
+        var load = function (){
+          callback && callback();
+          $(img).off("load", load);
+          $(img).off("error", error);
+        };
+        var error = function (){
+          this.showError();
+        }
+        $(img).on("load", load);
+        $(img).on("error", error.bind(this));
       },
       isMobile: function() {
         if (/(iPhone|iPod|Android|ios|SymbianOS)/i.test(navigator.userAgent)){
@@ -145,9 +196,7 @@
             this.playNext();
           }.bind(this));
         }else{
-          scene.onStart && scene.onStart(function (){
-            
-          });
+          scene.onStart && scene.onStart(function (){});
         }
 
         this._loadScene();//load next scene when playing current scene

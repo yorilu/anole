@@ -3,7 +3,9 @@
   paths: {
     'anole': 'anole',
 	  'demo': 'demo',
-    'hammer': 'hammer'
+    'hammer': 'hammer',
+    'TweenLite': 'tween/TweenLite',
+    'TweenMax': 'tween/TweenMax'
   },
   shim: {
     zepto: {

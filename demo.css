@@ -48,19 +48,19 @@ html, body{
 	border:1px solid #F00;
 }
 .scene1{
-  background-color:#F00;
+
 }
 .scene2{
-  background-color:#0F0;
+
 }
 .scene3{
-  background-color:#00F;
+ 
 }
 .scene4{
-  background-color:#FF0;
+ 
 }
 .scene5{
-  background-color:#0FF;
+
 }
 .next-btn{
 
@@ -73,4 +73,11 @@ html, body{
   height:50px;
   border:1px solid #000;
   display:inline-block;
+}
+
+.spite1{
+  width:50px;
+  height:50px;
+  border:1px solid #F00;
+  position:relative;
 }
