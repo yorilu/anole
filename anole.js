@@ -9,10 +9,14 @@
           $(dom).appendTo($fragment);
         },
         get: function (string){
-          return $fragment.find(string);
+          var el = $fragment.find(string);
+          $fragment.html();
+          return el;
         },
         getAll: function (){
-          return $fragment;
+          var els = $fragment.children();
+          $fragment.html();
+          return els;
         },
         clean: function (){
           $fragment.html("");
@@ -100,28 +104,34 @@
         
         var nextScene = this._config.sceneQueue[this._loadedScene];
         var fileName = nextScene.fileName;
-        var res = nextScene.res;
+        var res = nextScene.res || [];
         
         if(this._currentScene == this._loadedScene){
           this.showLoading();
         }
         
         //TODO load resource and scene at the same time; 
-        res && this._loadResource(res, function (){
-          this.hideLoading();
-        }.bind(this));
-        
-        var url = this._config.baseUrl+fileName;
-        this.getScript(url,function(data){
-          this._loadedScene++
+        this._loadResource(res, function (){
+          var url = this._config.baseUrl+fileName;
+          this.getScript(url,function(data){
+            this.hideLoading();
+            this._loadedScene++
+          }.bind(this));
         }.bind(this));
       },
       _loadResource: function (res, callback){
+        
+        if(!res.length){
+          callback && callback();
+          return;
+        }
+        
         function loadNext(){
           this._loadOneResource(res.pop(), function (){
-            if(res.length){
-              loadNext.bind(this)();
+            if(!res.length){
               callback && callback();
+            }else{
+              loadNext.bind(this)();
             }
           }.bind(this))
         };
@@ -129,11 +139,18 @@
         loadNext.bind(this)();
       },
       _loadOneResource: function (res, callback){
+        
+        if(this._resourceLoaded[res]){
+          callback && callback();
+          return;
+        }
+
         var src = this._config.resoureUrl + this._config.resource[res];
         var img = document.createElement("img");
         img.src = src;
         
         var load = function (){
+          this._resourceLoaded[res] = true;
           callback && callback();
           $(img).off("load", load);
           $(img).off("error", error);
@@ -141,7 +158,7 @@
         var error = function (){
           this.showError();
         }
-        $(img).on("load", load);
+        $(img).on("load", load.bind(this));
         $(img).on("error", error.bind(this));
       },
       isMobile: function() {

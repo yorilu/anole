@@ -15,19 +15,17 @@
     sceneQueue = [
       {
         fileName:'scene1.js',
-        res: ["rs1","rs2","rs3"] //depend resources.
+        res: ["rs1","rs2","rs3","rs4","rs5"] //depend resources.
       },
       {
-        fileName:'scene2.js'
+        fileName:'scene2.js',
+        res: ["rs1","rs2","rs3","rs4","rs5"] //depend resources.
       },
       {
         fileName:'scene3.js'
       },
       {
         fileName:'scene4.js'
-      },
-      {
-        fileName:'scene5.js'
       }
     ]
     baseUrl = './scene/';
@@ -46,8 +44,14 @@
       containerTemplate: '<div class="container"></div>',//scene root container, it will be appended to body.
       prevBtnTemplate: '<div class="prev-btn btn J_PrevBtn">prev</div>',//prev button dom
       nextBtnTemplate: '<div class="next-btn btn J_NextBtn">next</div>',//next button dom
-      showLoading: function (){ console.log("loading resource, show load dialog") }, 
-      hideLoading: function (){ console.log("resource loaded, hide load dialog") },
+      showLoading: function (){ 
+        $(".mask").show();
+        console.log("loading resource, show load dialog");
+      }, 
+      hideLoading: function (){
+        $(".mask").hide();
+        console.log("resource loaded, hide load dialog")
+      },
       showError: function (){ console.log("app error !!!! resource error!!!!") }
     })
     

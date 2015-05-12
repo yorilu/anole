@@ -1,7 +1,7 @@
 ;require(['anole', 'zepto'], function (anole){
-  var sceneHandler = $('<div class="scene scene5">');
+  var sceneHandler = $('<div class="scene scene4">');
   
-  sceneHandler.html("<h1>5</h1>")
+  sceneHandler.html("<h1>4</h1>")
   
   anole.addScene({
     sceneHandler: sceneHandler,
@@ -9,9 +9,9 @@
       
     },
     onStart: function (finish){
-      console.log("scene5 playing");
+      console.log("scene4 playing");
       setTimeout(function (){
-        console.log("scene5 playend");
+        console.log("scene4 playend");
         finish();
       },1000); 
     },

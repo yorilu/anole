@@ -10,18 +10,21 @@
     },
     onStart: function (finish){
       console.log("scene2 onStart");
-      setTimeout(function (){
+      var sp1 = $(".sprite1")[0];
+      TweenMax.to(sp1, 1, {x:450, y:450, bezier:[{x:250, y:50}],onComplete: function (){
         finish();
-      },1000); 
+      }});
     },
     onBack: function (finish){
-      console.log("scene2 onBack");
-      setTimeout(function (){
+      var sp1 = $(".sprite1")[0];
+      TweenMax.to(sp1, 0.5, {x:0, y:0,onComplete: function (){
         finish();
-      },1000); 
+      }});
     },
     onEnd: function (){
       console.log("scene2 onEnd");
+      var sp1 = $(".sprite1")[0];
+      anole.hold.add(sp1);
     }
   })
 });
