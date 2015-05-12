@@ -1,40 +1,18 @@
 ;define(['zepto', 'hammer'], function (zepto, Hammer){
   var anole = window.anole || {};
-  
-    var hold = (function (){
-      var $fragment = $("<fragment>");
-      
-      return {
-        add: function (dom){
-          $(dom).appendTo($fragment);
-        },
-        get: function (string){
-          var el = $fragment.find(string);
-          $fragment.html();
-          return el;
-        },
-        getAll: function (){
-          var els = $fragment.children();
-          $fragment.html();
-          return els;
-        },
-        clean: function (){
-          $fragment.html("");
-        }
-      }
-    })()
-  
-    anole= {
+
+  anole= {
       _currentScene: 0,
       _loadedScene:0,
       _playedScene:0,
       _config:{},
       _scene:{},
-      _root: null, // root container
+      canvas: null, // canvas
       _resourceLoaded: {},
       _init: function (){
-        var _root = this._root = $(this._config.containerTemplate);
-        $('body').append(_root);
+        var $canvas = $(this._config.containerTemplate);
+        $('body').append($canvas);
+        var _canvas = this.canvas = $canvas;
         
         if(this._config.flipType == 'click'){
           var prevBtn = this._prevBtn = $(this._config.prevBtnTemplate);
@@ -43,7 +21,7 @@
           prevBtn.on('click', this.playPrev.bind(this));
           nextBtn.on('click', this.playNext.bind(this));
         }else if(this._config.flipType == 'swipe'){
-          var hammer = new Hammer(_root[0]);
+          var hammer = new Hammer(_canvas[0]);
           hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
           hammer.on('swipe', function(ev) {
               var d = ev.offsetDirection;
@@ -60,7 +38,6 @@
       showLoading: function (){/* abstract */}, // it will be triggered when loading the resource of current scene 
       hideLoading: function (){/* abstract */},// it will be triggered when resource loaded finished
       showError: function (){/* abstract */}, // it will be triggered when resource error
-      hold: hold,
       fc: function (){},
       config: function (config){
         $.each(config, function (k,v){
@@ -86,6 +63,14 @@
         $.each(b, function (k,v){
           a[k]=v;
         })
+      },
+      getOrCreate: function (query, tag, style){
+        var target = $(query);
+        if(!target[0]){
+          target = $(tag);
+        }
+        target.css(style);
+        return target;
       },
       start: function (){
         this._init();
@@ -187,14 +172,9 @@
       },
       triggerBack:function (index){
         var scene = this._scene[index];
-        if(scene.onBack){
-          scene.onBack(function (){
-            this.triggerEnd(index);
-            this.playScene(--this._currentScene);
-          }.bind(this));
-        }else{
-          this.triggerEnd(index);
-        }
+        scene.onBack && scene.onBack(function (){
+          this.playScene(--this._currentScene);
+        }.bind(this));
       },
       triggerEnd: function (index){
         var scene = this._scene[index];
@@ -202,10 +182,7 @@
       },
       playScene: function (index){
         var scene = this._scene[index];
-        
-        var sceneHandler = scene.sceneHandler;
-        this._root.html(sceneHandler);
-        
+       
         scene.onInit && scene.onInit();//init scene
         if(this._config.autoPlay){     //autoplay
           scene.onStart && scene.onStart(function (){
@@ -217,9 +194,6 @@
         }
 
         this._loadScene();//load next scene when playing current scene
-      },
-      clearCanvas: function (){
-        this._root.html("");
       },
       playMusic: function (){
         //todo

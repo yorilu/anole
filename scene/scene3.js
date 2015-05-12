@@ -1,10 +1,7 @@
 ;require(['anole', 'zepto'], function (anole){
-  var sceneHandler = $('<div class="scene scene3">');
-  
+
   anole.addScene({
-    sceneHandler: sceneHandler,
     onInit: function (){
-      var hold = anole.hold.getAll();
       sceneHandler.html(hold);
       console.log("scene3 onInit");
     },
@@ -24,8 +21,6 @@
     },
     onEnd: function (){
       console.log("scene3 onEnd");
-      var sp1 = $(".sprite1")[0];
-      anole.hold.add(sp1);
     }
   })
 });
