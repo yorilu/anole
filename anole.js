@@ -143,7 +143,7 @@
           var media = new Audio(src);  
           media.src = src;
           this._resourceLoaded[res] = true;
-          $(media).on("canplay",function (e){
+          $(media).on("oncanplaythrough",function (e){
             musicList[res] = media;
             callback && callback();
           })
