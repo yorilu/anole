@@ -2,41 +2,29 @@
   
   anole.addScene({
     onInit: function (){
-      var  template = '<div class="sprite sprite1" style="left:30px;top:-100px;"></div>'+
-                      '<div class="sprite sprite2" style="left:120px;top:-100px;"></div>'+
-                      '<div class="sprite sprite3" style="left:240px;top:-100px;"></div>'+
-                      '<div class="sprite sprite4" style="left:310px;top:-100px;"></div>'+
-                      '<div class="sprite sprite5" style="left:410px;top:-100px;"></div>';
-      
-      anole.canvas.html(template);
+      this.sp1 = anole.getOrCreate('.sprite1','<div class="sprite sprite1">', {left:30,top:-100},anole.canvas);
+      this.sp2 = anole.getOrCreate('.sprite2','<div class="sprite sprite2">', {left:120,top:-100},anole.canvas);
+      this.sp3 = anole.getOrCreate('.sprite3','<div class="sprite sprite3">', {left:240,top:-100},anole.canvas);
+      this.sp4 = anole.getOrCreate('.sprite4','<div class="sprite sprite4">', {left:310,top:-100},anole.canvas);
+      this.sp5 = anole.getOrCreate('.sprite5','<div class="sprite sprite5">', {left:410,top:-100},anole.canvas);
       console.log("scene1 onInit");
     },
     onStart: function (finish){
       console.log("scene1 onStart");
-      var sp1 = $(".sprite1")[0];
-      var sp2 = $(".sprite2")[0];
-      var sp3 = $(".sprite3")[0];
-      var sp4 = $(".sprite4")[0];
-      var sp5 = $(".sprite5")[0];
-      //var tl = new TimelineMax();
-     // tl.to(sp1, 1, {left:"450px"});
-     // tl.to(sp1, 1, {left:"450px",top:"450px"});
-     // tl.to(sp1, 1, {left:"0",top:"450px"});
-     // tl.to(sp1, 1, {left:"0",top:"0"});
-      
-      TweenMax.to(sp1, 0.5, {delay:0,x:0, y:380, bezier:[{x:500, y:500}],onComplete: function (){
+      anole.playMusic("mymusic");
+      TweenMax.to(this.sp1, 0.5, {delay:0,top:380,onComplete: function (){
         
       }});
-      TweenMax.to(sp2, 0.5, {delay:0.2,x:0, y:210, bezier:[{x:100, y:50}],onComplete: function (){
+      TweenMax.to(this.sp2, 0.5, {delay:0.2,top:210, onComplete: function (){
         
       }});
-      TweenMax.to(sp3, 0.8, {delay:0.5,x:0, y:430, bezier:[{x:250, y:50}],onComplete: function (){
+      TweenMax.to(this.sp3, 0.8, {delay:0.5,top:430,onComplete: function (){
         finish();
       }});
-      TweenMax.to(sp4, 0.5, {delay:0.3,x:0, y:240, bezier:[{x:250, y:50}],onComplete: function (){
+      TweenMax.to(this.sp4, 0.5, {delay:0.3,top:240, onComplete: function (){
         
       }});
-      TweenMax.to(sp5, 0.5, {delay:0,x:0, y:180, bezier:[{x:250, y:50}],onComplete: function (){
+      TweenMax.to(this.sp5, 0.5, {delay:0,top:180, onComplete: function (){
         
       }});
     },

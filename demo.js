@@ -8,14 +8,15 @@
     "rs2": "rs2.jpg",
     "rs3": "rs3.jpg",
     "rs4": "rs4.jpg",
-    "rs5": "rs5.jpg"
+    "rs5": "rs5.jpg",
+    "mymusic": "a.mp3"
   }
   
   //if(!anole.isMobile()){
     sceneQueue = [
       {
         fileName:'scene1.js',
-        res: ["rs1","rs2","rs3","rs4","rs5"] //depend resources.
+        res: ["rs1","rs2","rs3","rs4","rs5","mymusic"] //depend resources.
       },
       {
         fileName:'scene2.js',

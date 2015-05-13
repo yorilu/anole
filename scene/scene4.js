@@ -1,22 +1,21 @@
 ;require(['anole', 'zepto'], function (anole){
+  
   anole.addScene({
     onInit: function (){
-      sceneHandler.html(hold);
       console.log("scene4 onInit");
+      var sp3 = this.sp3 = anole.getOrCreate('.sprite3','<div class="sprite sprite3">', {},anole.canvas);
+      TweenMax.set(sp3[0],{left:225,top:225,x:0,y:0,rotation:"720deg"});
+     // this.sp3 = anole.getOrCreate('.sprite3','<div class="sprite sprite3">', {left:225,top:225},anole.canvas);
     },
     onStart: function (finish){
       console.log("scene4 onStart");
-      var sp1 = $(".sprite1")[0];
-      TweenMax.to(sp1, 1, {x:0, y:0,onComplete: function (){
+      
+      TweenMax.to(this.sp3[0], 1, {rotation:"0deg",onComplete: function (){
         finish();
       }});
     },
     onBack: function (finish){
-      console.log("scene3 onBack");
-      var sp1 = $(".sprite1")[0];
-      TweenMax.to(sp1, 0.5, {x:450, y:450,onComplete: function (){
         finish();
-      }});
     },
     onEnd: function (){
       console.log("scene4 onEnd");

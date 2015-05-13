@@ -1,6 +1,7 @@
 ;define(['zepto', 'hammer'], function (zepto, Hammer){
   var anole = window.anole || {};
-
+  var musicList = {};
+  
   anole= {
       _currentScene: 0,
       _loadedScene:0,
@@ -64,11 +65,15 @@
           a[k]=v;
         })
       },
-      getOrCreate: function (query, tag, style){
+      getOrCreate: function (query, tag, style, parent){
         var target = $(query);
         if(!target[0]){
           target = $(tag);
+          if(parent){
+            $(parent).append(target);
+          }
         }
+       // target.attr("style","");
         target.css(style);
         return target;
       },
@@ -129,22 +134,33 @@
           callback && callback();
           return;
         }
-
         var src = this._config.resoureUrl + this._config.resource[res];
-        var img = document.createElement("img");
-        img.src = src;
-        
-        var load = function (){
-          this._resourceLoaded[res] = true;
-          callback && callback();
-          $(img).off("load", load);
-          $(img).off("error", error);
-        };
         var error = function (){
           this.showError();
         }
-        $(img).on("load", load.bind(this));
-        $(img).on("error", error.bind(this));
+        
+        if(/\.mp3|\.wav|\.ogg$/.test(src)){
+          var media = new Audio(src);  
+          media.src = src;
+          this._resourceLoaded[res] = true;
+          $(media).on("canplay",function (e){
+            musicList[res] = media;
+            callback && callback();
+          })
+        }else{
+          var obj;
+          obj = document.createElement("img");
+          obj.src = src;
+        
+          var load = function (){
+            this._resourceLoaded[res] = true;
+            callback && callback();
+            $(obj).off("load", load);
+            $(obj).off("error", error);
+          };
+          $(obj).on("load", load.bind(this));
+          $(obj).on("error", error.bind(this));
+        }
       },
       isMobile: function() {
         if (/(iPhone|iPod|Android|ios|SymbianOS)/i.test(navigator.userAgent)){
@@ -195,8 +211,12 @@
 
         this._loadScene();//load next scene when playing current scene
       },
-      playMusic: function (){
-        //todo
+      playMusic: function (res){
+        var music = musicList[res];
+        if(music){
+          music.play();
+        }
+        return music;
       },
       playVideo: function (){
         //todo
