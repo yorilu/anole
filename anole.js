@@ -211,12 +211,11 @@
 
         this._loadScene();//load next scene when playing current scene
       },
-      playMusic: function (res){
+      getMusic: function (res){
         var music = musicList[res];
         if(music){
-          music.play();
+          return music
         }
-        return music;
       },
       playVideo: function (){
         //todo

@@ -11,7 +11,8 @@
     },
     onStart: function (finish){
       console.log("scene1 onStart");
-      anole.playMusic("mymusic");
+      var music = anole.getMusic("mymusic");
+      music.play();
       TweenMax.to(this.sp1, 0.5, {delay:0,top:380,onComplete: function (){
         
       }});
