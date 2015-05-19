@@ -65,7 +65,7 @@
           a[k]=v;
         })
       },
-      getOrCreate: function (query, tag, style, parent){
+      getOrCreate: function (query, tag, parent, style){
         var target = $(query);
         if(!target[0]){
           target = $(tag);
@@ -74,7 +74,9 @@
           }
         }
        // target.attr("style","");
-        target.css(style);
+		if (style) {
+			target.css(style);
+		}
         return target;
       },
       start: function (){
