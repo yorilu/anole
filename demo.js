@@ -41,7 +41,7 @@
       maxQueueLength: 2,//TODO load serval scenes at same time
       sceneQueue: sceneQueue,//anime scene queue
       autoPlay: false,//auto play with no event
-      flipType: 'click',//flip type eg:click, swipe
+      flipType: 'wheel',//flip type eg:click, swipe, wheel
       containerTemplate: '<div class="container"></div>',//scene root container, it will be appended to body.
       prevBtnTemplate: '<div class="prev-btn btn J_PrevBtn">prev</div>',//prev button dom
       nextBtnTemplate: '<div class="next-btn btn J_NextBtn">next</div>',//next button dom
