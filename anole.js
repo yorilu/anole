@@ -1,8 +1,7 @@
 ;define(['zepto', 'hammer'], function (zepto, Hammer){
-  var anole = window.anole || {};
   var musicList = {};
   
-  anole= {
+  var anole = window.anole = {
       _currentScene: 0,
       _loadedScene:0,
       _playedScene:0,
@@ -46,6 +45,7 @@
           }.bind(this))
         }
         
+        
         this._loadScene();
       },
       showLoading: function (){/* abstract */}, // it will be triggered when loading the resource of current scene 
@@ -78,13 +78,23 @@
         })
       },
       getOrCreate: function (query, tag, parent, style){
-        var target = $(query);
+        var target;
+
+        target = $(query);
         if(!target[0]){
-          target = $(tag);
+          if($.isFunction(tag)){
+            target = tag();
+            if(!$.isObject(target)){
+              target = $(target);
+            }
+          }else{
+            target = $(tag);
+          }
           if(parent){
             $(parent).append(target);
           }
         }
+        
         if (style) {
           target.css(style);
         }
@@ -95,9 +105,9 @@
       },
       addScene: function (scene){
         this._scene[this._loadedScene-1] = scene;
-        if(this._loadedScene==1){
-          this.playScene(0);
-        }
+      },
+      startAnime: function (){
+        this.playScene(0);
       },
       _loadScene: function (){
         var that = this;
@@ -234,6 +244,8 @@
         //todo
       }
     };
+    
+    anole.$$ = anole.getOrCreate;
     
     return anole;
 });
