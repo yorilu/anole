@@ -1,14 +1,23 @@
+// Done:
+// 1. the loadedScene index should be updated together with playScene when play scene-to-play.
+// 2. fix the onStart without finish in timeline end issue.
+
+// TODO:
+// 1. for each scene: set a index for each scene to fix the multi-scene-load-order-can-be-wrong issue
+// 2. for each scene: expose its timeline to make it easy to manage.
+
 ;define(['zepto', 'hammer'], function (zepto, Hammer){
   var anole = window.anole || {};
   var musicList = {};
   
   anole= {
       _currentScene: 0,
-      _loadedScene:0,
+      _sceneNameIndexMap: {}, // mapping from scene js name to its index in the scene queue to play.
       _playedScene:0,
+      _nextSceneIndexToPlay:-1, // the scene should play once loaded (added onto anole scene)
       _config:{},
-      _scene:{},
-      canvas: null, // canvas
+      _scene:{}, // mapping from scene index to scene. If none, then the scene is not added onto the stage.
+      canvas: null,
       _resourceLoaded: {},
       _init: function (){
         var $canvas = $(this._config.containerTemplate);
@@ -32,9 +41,20 @@
                 this.playNext();
               }
           }.bind(this));
+        }else if(this._config.flipType == 'wheel'){
+          $(document).bind('mousewheel DOMMouseScroll', function(event) {
+            event.preventDefault();
+            var delta;
+            var type = event.type;
+            delta = (event.wheelDelta) ? event.wheelDelta / 120 : -(event.detail || 0) / 3;
+            if(delta < 0){
+              this.playNext();
+            }else{
+              this.playPrev();
+            }
+          }.bind(this))
         }
-        
-        this._loadScene();
+        this._loadScene(0);
       },
       showLoading: function (){/* abstract */}, // it will be triggered when loading the resource of current scene 
       hideLoading: function (){/* abstract */},// it will be triggered when resource loaded finished
@@ -49,14 +69,16 @@
           }
         }.bind(this));
       },
-      getScript: function(src, func) {
+      getScript: function(src, sceneIndex) {
         var script = document.createElement('script');
         script.async = "async";
         script.src = src;
-        if (func) {
-           script.onload = func;
-        }
-        //Load scripts to the bottom of body.
+		script.onload = function() {
+			var thisSrc = src;
+			console.log("GetScript onload. sceneIndex: " + sceneIndex + ". src: " + thisSrc);
+			this.hideLoading();
+		}.bind(this);
+          //Load scripts to the bottom of body.
         document.body.appendChild(script);
       },
       // attach b's key-value pairs to a as properties.
@@ -65,6 +87,7 @@
           a[k]=v;
         })
       },
+	  // Returns a jQuery object instead of a dom node.
       getOrCreate: function (query, tag, parent, style){
         var target = $(query);
         if(!target[0]){
@@ -73,7 +96,6 @@
             $(parent).append(target);
           }
         }
-       // target.attr("style","");
 		if (style) {
 			target.css(style);
 		}
@@ -83,37 +105,51 @@
         this._init();
       },
       addScene: function (scene){
-        this._scene[this._loadedScene-1] = scene;
-        if(this._loadedScene==1){
-          this.playScene(0);
-        }
+          var addedSceneIndex = this._sceneNameIndexMap[scene.name];
+          console.log("addScene: name: " + scene.name + " index: " + addedSceneIndex +
+                      " Next scene to play: " + this._nextSceneIndexToPlay);
+          this._scene[addedSceneIndex] = scene;
+          if(addedSceneIndex==0){
+              console.log("addScene => playScene0");
+              this.playScene(0);
+              return;
+          }
+
+          if (this._nextSceneIndexToPlay == addedSceneIndex) {
+              console.log("addScene: play nextSceneToPlay: " + addedSceneIndex);
+              // be sure to put this before playscene, as playscene might playnext inside
+              this._nextSceneIndexToPlay = -1;
+              console.log("addScene => playScene todo" + (this._currentScene+1));
+              this.playScene(addedSceneIndex);
+              return;
+          }
       },
-      _loadScene: function (){
-        var that = this;
-        if(this._loadedScene > this._config.sceneQueue.length -1){
+      _loadScene: function (sceneIndex){
+		console.log("loadScene, index: " + sceneIndex +
+					" sceneQueueLength: " + this._config.sceneQueue.length);
+        if(sceneIndex > this._config.sceneQueue.length -1) {
           return;
         }
         
-        var nextScene = this._config.sceneQueue[this._loadedScene];
+        var nextScene = this._config.sceneQueue[sceneIndex];
         var fileName = nextScene.fileName;
         var res = nextScene.res || [];
-        
-        if(this._currentScene == this._loadedScene){
+        this._sceneNameIndexMap[fileName] = sceneIndex;
+
+        if(this._currentScene == sceneIndex){
           this.showLoading();
         }
         
-        //TODO load resource and scene at the same time; 
+        //TODO load resource and scene at the same time;
         this._loadResource(res, function (){
           var url = this._config.baseUrl+fileName;
-          this.getScript(url,function(data){
-            this.hideLoading();
-            this._loadedScene++
-          }.bind(this));
+		  this.getScript(url, sceneIndex);
         }.bind(this));
       },
       _loadResource: function (res, callback){
         
         if(!res.length){
+          // console.log("loadResource: run callback when res.length is 0");
           callback && callback();
           return;
         }
@@ -137,6 +173,7 @@
           return;
         }
         var src = this._config.resoureUrl + this._config.resource[res];
+		//console.log("loadOneResource: src: " + src);
         var error = function (){
           this.showError();
         }
@@ -172,21 +209,30 @@
         }
       },
       playPrev: function (){
+          console.log("playPrev: " + this._currentScene);
         if(!this._currentScene){
           return;
         }
         this.triggerBack(this._currentScene)
       },
-      playNext: function (){
-        if(this._currentScene +1 > this._loadedScene -1){
-            return;
-        }
-        
-        if(this._currentScene >= this._playedScene){
+      playNext: function () {
+          console.log("---- PLAY NEXT, index: " + this._currentScene + ". Now play next");
+          if(!this._scene[this._currentScene + 1]) { // If next scene is not ready yet.
+              this._nextSceneIndexToPlay = this._currentScene+1;
+              console.log("playNext failed: scene is not added yet: " + (this._currentScene+1) +
+                          ". nextSceneIndexToPlay: " + this._nextSceneIndexToPlay);
+              return;
+          } else {
+              console.log("playNext: scene is ready: " + (this._currentScene+1));
+          }
+
+        if(this._currentScene >= this._playedScene){ // Already played.
           this._playedScene = this._currentScene + 1;
         }
-        this.triggerEnd(this._currentScene)
-        this.playScene(++this._currentScene);
+        this.triggerEnd(this._currentScene);
+          console.log("PlayNext => playScene" + (this._currentScene+1));
+          ++this._currentScene;
+        this.playScene(this._currentScene);
       },
       triggerBack:function (index){
         var scene = this._scene[index];
@@ -199,19 +245,23 @@
         scene.onEnd && scene.onEnd();
       },
       playScene: function (index){
+          this._currentScene = index;
+
+          console.log("---- PlayScene: " + index);
         var scene = this._scene[index];
        
         scene.onInit && scene.onInit();//init scene
         if(this._config.autoPlay){     //autoplay
           scene.onStart && scene.onStart(function (){
             // auto play next scene if config.autoPlay is true
+            console.log("Autoplay scene.onStart");
             this.playNext();
           }.bind(this));
         }else{
           scene.onStart && scene.onStart(function (){});
         }
 
-        this._loadScene();//load next scene when playing current scene
+        this._loadScene(index + 1);//load next scene when playing current scene
       },
       getMusic: function (res){
         var music = musicList[res];
