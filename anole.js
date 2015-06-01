@@ -7,10 +7,9 @@
 // 2. for each scene: expose its timeline to make it easy to manage.
 
 ;define(['zepto', 'hammer'], function (zepto, Hammer){
-  var anole = window.anole || {};
   var musicList = {};
   
-  anole= {
+  var anole = window.anole = {
       _currentScene: 0,
       _sceneNameIndexMap: {}, // mapping from scene js name to its index in the scene queue to play.
       _playedScene:0,
@@ -24,21 +23,24 @@
         $('body').append($canvas);
         var _canvas = this.canvas = $canvas;
         
+        var playPrev = this.throttle(this.playPrev.bind(this), 1000);
+        var playNext = this.throttle(this.playNext.bind(this), 1000);
+        
         if(this._config.flipType == 'click'){
           var prevBtn = this._prevBtn = $(this._config.prevBtnTemplate);
           var nextBtn = this._nextBtn =  $(this._config.nextBtnTemplate);
           $('body').append(prevBtn).append(nextBtn);
-          prevBtn.on('click', this.playPrev.bind(this));
-          nextBtn.on('click', this.playNext.bind(this));
+          prevBtn.on('click', playPrev);
+          nextBtn.on('click', playNext);
         }else if(this._config.flipType == 'swipe'){
           var hammer = new Hammer(_canvas[0]);
           hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
           hammer.on('swipe', function(ev) {
               var d = ev.offsetDirection;
               if(d == 2 || d == 8){
-                this.playPrev();
+                playPrev();
               }else{
-                this.playNext();
+                playNext();
               }
           }.bind(this));
         }else if(this._config.flipType == 'wheel'){
@@ -89,9 +91,18 @@
       },
 	  // Returns a jQuery object instead of a dom node.
       getOrCreate: function (query, tag, parent, style){
-        var target = $(query);
+        var target;
+
+        target = $(query);
         if(!target[0]){
-          target = $(tag);
+          if($.isFunction(tag)){
+            target = tag();
+            if(!$.isObject(target)){
+              target = $(target);
+            }
+          }else{
+            target = $(tag);
+          }
           if(parent){
             $(parent).append(target);
           }
@@ -123,6 +134,9 @@
               this.playScene(addedSceneIndex);
               return;
           }
+      },
+      startAnime: function (){
+        this.playScene(0);
       },
       _loadScene: function (sceneIndex){
 		console.log("loadScene, index: " + sceneIndex +
@@ -271,8 +285,20 @@
       },
       playVideo: function (){
         //todo
+      },
+      throttle: function(action, delay){
+        var last = 0;
+        return function(){
+          var curr = +new Date();
+          if (curr - last > delay){
+            action.apply(this, arguments);
+            last = curr;
+          }
+        };
       }
     };
+    
+    anole.$$ = anole.getOrCreate;
     
     return anole;
 });
