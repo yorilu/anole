@@ -14,8 +14,8 @@
         $('body').append($canvas);
         var _canvas = this.canvas = $canvas;
         
-        var playPrev = this.throttle(this.playPrev.bind(this), 500);
-        var playNext = this.throttle(this.playNext.bind(this), 500);
+        var playPrev = this.throttle(this.playPrev.bind(this), 1000);
+        var playNext = this.throttle(this.playNext.bind(this), 1000);
         
         if(this._config.flipType == 'click'){
           var prevBtn = this._prevBtn = $(this._config.prevBtnTemplate);
@@ -250,9 +250,10 @@
         var last = 0;
         return function(){
           var curr = +new Date();
-          if (curr - last > delay)
+          if (curr - last > delay){
             action.apply(this, arguments);
-          last = curr;
+            last = curr;
+          }
         };
       }
     };
