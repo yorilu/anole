@@ -14,21 +14,24 @@
         $('body').append($canvas);
         var _canvas = this.canvas = $canvas;
         
+        var playPrev = this.throttle(this.playPrev.bind(this), 500);
+        var playNext = this.throttle(this.playNext.bind(this), 500);
+        
         if(this._config.flipType == 'click'){
           var prevBtn = this._prevBtn = $(this._config.prevBtnTemplate);
           var nextBtn = this._nextBtn =  $(this._config.nextBtnTemplate);
           $('body').append(prevBtn).append(nextBtn);
-          prevBtn.on('click', this.playPrev.bind(this));
-          nextBtn.on('click', this.playNext.bind(this));
+          prevBtn.on('click', playPrev);
+          nextBtn.on('click', playNext);
         }else if(this._config.flipType == 'swipe'){
           var hammer = new Hammer(_canvas[0]);
           hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
           hammer.on('swipe', function(ev) {
               var d = ev.offsetDirection;
               if(d == 2 || d == 8){
-                this.playPrev();
+                playPrev();
               }else{
-                this.playNext();
+                playNext();
               }
           }.bind(this));
         }else if(this._config.flipType == 'wheel'){
@@ -38,9 +41,9 @@
             var type = event.type;
             delta = (event.wheelDelta) ? event.wheelDelta / 120 : -(event.detail || 0) / 3;
             if(delta < 0){
-              this.playNext();
+              playNext();
             }else{
-              this.playPrev();
+              playPrev();
             }
           }.bind(this))
         }
@@ -242,6 +245,15 @@
       },
       playVideo: function (){
         //todo
+      },
+      throttle: function(action, delay){
+        var last = 0;
+        return function(){
+          var curr = +new Date();
+          if (curr - last > delay)
+            action.apply(this, arguments);
+          last = curr;
+        };
       }
     };
     
