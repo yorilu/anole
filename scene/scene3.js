@@ -1,6 +1,7 @@
 ;require(['anole', 'zepto'], function (anole){
   
   anole.addScene({
+    name: "scene3.js",
     onInit: function (){
       console.log("scene3 onInit");
       var sp3 = anole.getOrCreate('.sprite3','<div class="sprite sprite3">', anole.canvas);

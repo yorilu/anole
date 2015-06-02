@@ -1,6 +1,7 @@
 ;require(['anole', 'zepto', 'TweenLite', 'TweenMax'], function (anole, zepto, TweenLite, TweenMax){
   
   anole.addScene({
+    name: "scene1.js",
     onInit: function (){
       this.sp1 = anole.getOrCreate('.sprite1',function (){
         return '<div class="sprite sprite1">';
@@ -13,13 +14,6 @@
     },
     onStart: function (finish){
       console.log("scene1 onStart");
-      var music = anole.getMusic("mymusic");
-      music.play();
-      var b = anole.getMusic("b");
-      setTimeout( function (){
-        b.play();
-        
-      },1000)
       
       var a = TweenMax.to(this.sp1, 0.5, {delay:0,top:380,onComplete: function (){
         

@@ -75,11 +75,11 @@
         var script = document.createElement('script');
         script.async = "async";
         script.src = src;
-		script.onload = function() {
-			var thisSrc = src;
-			console.log("GetScript onload. sceneIndex: " + sceneIndex + ". src: " + thisSrc);
-			this.hideLoading();
-		}.bind(this);
+        script.onload = function() {
+          var thisSrc = src;
+          console.log("GetScript onload. sceneIndex: " + sceneIndex + ". src: " + thisSrc);
+          this.hideLoading();
+        }.bind(this);
           //Load scripts to the bottom of body.
         document.body.appendChild(script);
       },
@@ -107,9 +107,9 @@
             $(parent).append(target);
           }
         }
-		if (style) {
-			target.css(style);
-		}
+        if (style) {
+          target.css(style);
+        }
         return target;
       },
       start: function (){
@@ -120,26 +120,21 @@
           console.log("addScene: name: " + scene.name + " index: " + addedSceneIndex +
                       " Next scene to play: " + this._nextSceneIndexToPlay);
           this._scene[addedSceneIndex] = scene;
-          if(addedSceneIndex==0){
-              console.log("addScene => playScene0");
-              this.playScene(0);
-              return;
-          }
 
           if (this._nextSceneIndexToPlay == addedSceneIndex) {
-              console.log("addScene: play nextSceneToPlay: " + addedSceneIndex);
-              // be sure to put this before playscene, as playscene might playnext inside
-              this._nextSceneIndexToPlay = -1;
-              console.log("addScene => playScene todo" + (this._currentScene+1));
-              this.playScene(addedSceneIndex);
-              return;
+            console.log("addScene: play nextSceneToPlay: " + addedSceneIndex);
+            // be sure to put this before playscene, as playscene might playnext inside
+            this._nextSceneIndexToPlay = -1;
+            console.log("addScene => playScene todo" + (this._currentScene+1));
+            this.playScene(addedSceneIndex);
+            return;
           }
       },
       startAnime: function (){
         this.playScene(0);
       },
       _loadScene: function (sceneIndex){
-		console.log("loadScene, index: " + sceneIndex +
+        console.log("loadScene, index: " + sceneIndex +
 					" sceneQueueLength: " + this._config.sceneQueue.length);
         if(sceneIndex > this._config.sceneQueue.length -1) {
           return;
@@ -157,7 +152,7 @@
         //TODO load resource and scene at the same time;
         this._loadResource(res, function (){
           var url = this._config.baseUrl+fileName;
-		  this.getScript(url, sceneIndex);
+          this.getScript(url, sceneIndex);
         }.bind(this));
       },
       _loadResource: function (res, callback){
@@ -181,13 +176,12 @@
         loadNext.bind(this)();
       },
       _loadOneResource: function (res, callback){
-        
         if(this._resourceLoaded[res]){
           callback && callback();
           return;
         }
         var src = this._config.resoureUrl + this._config.resource[res];
-		//console.log("loadOneResource: src: " + src);
+        //console.log("loadOneResource: src: " + src);
         var error = function (){
           this.showError();
         }
@@ -230,15 +224,15 @@
         this.triggerBack(this._currentScene)
       },
       playNext: function () {
-          console.log("---- PLAY NEXT, index: " + this._currentScene + ". Now play next");
-          if(!this._scene[this._currentScene + 1]) { // If next scene is not ready yet.
-              this._nextSceneIndexToPlay = this._currentScene+1;
-              console.log("playNext failed: scene is not added yet: " + (this._currentScene+1) +
-                          ". nextSceneIndexToPlay: " + this._nextSceneIndexToPlay);
-              return;
-          } else {
-              console.log("playNext: scene is ready: " + (this._currentScene+1));
-          }
+        console.log("---- PLAY NEXT, index: " + this._currentScene + ". Now play next");
+        if(!this._scene[this._currentScene + 1]) { // If next scene is not ready yet.
+            this._nextSceneIndexToPlay = this._currentScene+1;
+            console.log("playNext failed: scene is not added yet: " + (this._currentScene+1) +
+                        ". nextSceneIndexToPlay: " + this._nextSceneIndexToPlay);
+            return;
+        } else {
+            console.log("playNext: scene is ready: " + (this._currentScene+1));
+        }
 
         if(this._currentScene >= this._playedScene){ // Already played.
           this._playedScene = this._currentScene + 1;
@@ -259,9 +253,9 @@
         scene.onEnd && scene.onEnd();
       },
       playScene: function (index){
-          this._currentScene = index;
+        this._currentScene = index;
 
-          console.log("---- PlayScene: " + index);
+        console.log("---- PlayScene: " + index);
         var scene = this._scene[index];
        
         scene.onInit && scene.onInit();//init scene
