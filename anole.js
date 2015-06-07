@@ -75,11 +75,11 @@
         var script = document.createElement('script');
         script.async = "async";
         script.src = src;
-        script.onload = function() {
-          var thisSrc = src;
-          console.log("GetScript onload. sceneIndex: " + sceneIndex + ". src: " + thisSrc);
-          this.hideLoading();
-        }.bind(this);
+		script.onload = function() {
+			var thisSrc = src;
+			console.log("GetScript onload. sceneIndex: " + sceneIndex + ". src: " + thisSrc);
+			this.hideLoading();
+		}.bind(this);
           //Load scripts to the bottom of body.
         document.body.appendChild(script);
       },
@@ -120,21 +120,27 @@
           console.log("addScene: name: " + scene.name + " index: " + addedSceneIndex +
                       " Next scene to play: " + this._nextSceneIndexToPlay);
           this._scene[addedSceneIndex] = scene;
+          if(addedSceneIndex==0){
+              console.log("addScene => playScene0");
+              this.playScene(0);
+              return;
+          }
 
           if (this._nextSceneIndexToPlay == addedSceneIndex) {
-            console.log("addScene: play nextSceneToPlay: " + addedSceneIndex);
-            // be sure to put this before playscene, as playscene might playnext inside
-            this._nextSceneIndexToPlay = -1;
-            console.log("addScene => playScene todo" + (this._currentScene+1));
-            this.playScene(addedSceneIndex);
-            return;
+              console.log("addScene: play nextSceneToPlay: " + addedSceneIndex);
+              // be sure to put this before playscene, as playscene might playnext inside
+              this._nextSceneIndexToPlay = -1;
+              console.log("addScene => playScene todo" + (this._currentScene+1));
+              this.playScene(addedSceneIndex);
+              return;
           }
+        this._scene[this._loadedScene-1] = scene;
       },
       startAnime: function (){
         this.playScene(0);
       },
       _loadScene: function (sceneIndex){
-        console.log("loadScene, index: " + sceneIndex +
+		console.log("loadScene, index: " + sceneIndex +
 					" sceneQueueLength: " + this._config.sceneQueue.length);
         if(sceneIndex > this._config.sceneQueue.length -1) {
           return;
@@ -152,7 +158,7 @@
         //TODO load resource and scene at the same time;
         this._loadResource(res, function (){
           var url = this._config.baseUrl+fileName;
-          this.getScript(url, sceneIndex);
+		  this.getScript(url, sceneIndex);
         }.bind(this));
       },
       _loadResource: function (res, callback){
@@ -165,7 +171,7 @@
         
         function loadNext(){
           this._loadOneResource(res.pop(), function (){
-            if(!res.length){
+			if(!res.length){
               callback && callback();
             }else{
               loadNext.bind(this)();
@@ -176,14 +182,17 @@
         loadNext.bind(this)();
       },
       _loadOneResource: function (res, callback){
+        
+		console.log('_loadOneResource: ' + res);
+        
         if(this._resourceLoaded[res]){
           callback && callback();
           return;
         }
         var src = this._config.resoureUrl + this._config.resource[res];
-        //console.log("loadOneResource: src: " + src);
+		//console.log("loadOneResource: src: " + src);
         var error = function (){
-          this.showError();
+          this.showError("Error loading "+src);
         }
         
         if(/\.mp3|\.wav|\.ogg$/.test(src)){
@@ -224,20 +233,20 @@
         this.triggerBack(this._currentScene)
       },
       playNext: function () {
-        console.log("---- PLAY NEXT, index: " + this._currentScene + ". Now play next");
-        if(!this._scene[this._currentScene + 1]) { // If next scene is not ready yet.
-            this._nextSceneIndexToPlay = this._currentScene+1;
-            console.log("playNext failed: scene is not added yet: " + (this._currentScene+1) +
-                        ". nextSceneIndexToPlay: " + this._nextSceneIndexToPlay);
-            return;
-        } else {
-            console.log("playNext: scene is ready: " + (this._currentScene+1));
-        }
+          console.log("---- PLAY NEXT, index: " + this._currentScene + ". Now play next");
+          if(!this._scene[this._currentScene + 1]) { // If next scene is not ready yet.
+              this._nextSceneIndexToPlay = this._currentScene+1;
+              console.log("playNext failed: scene is not added yet: " + (this._currentScene+1) +
+                          ". nextSceneIndexToPlay: " + this._nextSceneIndexToPlay);
+              return;
+          } else {
+              console.log("playNext: scene is ready: " + (this._currentScene+1));
+          }
 
         if(this._currentScene >= this._playedScene){ // Already played.
           this._playedScene = this._currentScene + 1;
         }
-        this.triggerEnd(this._currentScene);
+        this.triggerForward(this._currentScene);
           console.log("PlayNext => playScene" + (this._currentScene+1));
           ++this._currentScene;
         this.playScene(this._currentScene);
@@ -248,14 +257,15 @@
           this.playScene(--this._currentScene);
         }.bind(this));
       },
-      triggerEnd: function (index){
+      triggerForward: function (index){
         var scene = this._scene[index];
-        scene.onEnd && scene.onEnd();
+        scene.onEnd && scene.onEnd(); // TODO: change all onEnd to onForward
+        scene.onForward && scene.onForward();
       },
       playScene: function (index){
-        this._currentScene = index;
+          this._currentScene = index;
 
-        console.log("---- PlayScene: " + index);
+          console.log("---- PlayScene: " + index);
         var scene = this._scene[index];
        
         scene.onInit && scene.onInit();//init scene
@@ -292,7 +302,87 @@
       }
     };
     
-    anole.$$ = anole.getOrCreate;
+	// Define base class Scene
+	function Scene(id, canvas, inherit) {
+		this.id = id;
+		this.name = 'scene'+id+'.js';
+		this.canvas = canvas;
+		this.inherit = inherit;
+		this.container = $("<div id='scene" + this.id + "' class='scene'></div>");
+		// List of dom elements that will be reused by other scenes afterwards.
+		// Note it's DOM not jQ Objects.
+		this.export = [];
+		// All animations are trained by this main timeline.
+		this.tl = new TimelineLite({paused:true});
+	}
+	// Methods list.
+	//
+	// Public:
+	Scene.prototype.onInit = function() {
+		// Empty current scene div.
+		var old = this.canvas.find('#scene' + this.id);
+		if (old) {
+			old.remove();
+			// TODO: Re-use already-rendered dom and timeline.
+			// Like this:
+			// this.tl = old.data('timeline');
+			// this.tl.replay();
+		}
+    console.log(this.id);
+		// When inherit is set to true,
+		// Current scene is initialed based on last scene.
+		// Copy previous scene's dom to current scene if it's present.
+		if (this.inherit) {
+			var prev = this.canvas.find('#scene' + (this.id-1));
+			if (prev) {
+				this.container = prev.clone(); // Not cloning events (nor data, probably).
+				prev.hide();
+				this.container.attr('id', 'scene' + this.id);
+			} else {
+			    console.log("Warning: scene" + (id-1) + "deleted unexpetedly."); 
+			}
+		}
+		this.container.show(); // container could be hidden if coming from next scene.
+		if (this.canvas) { // If parent dom is provided, append content html to it.
+			var html = this.createDom();
+		    if (html) {
+		        this.canvas.append($(html));
+		    } else {
+			    this.canvas.append(this.container);
+		    }
+		}
+	};
+
+	Scene.prototype.onStart = function(callback) {
+		// Do animations here.
+		this.animation();
+		if (callback) {
+			this.tl.call(callback);
+		}
+		this.tl.play();
+	};
+	// When button NEXT clicked/swipe down/scroll down. 
+	Scene.prototype.onForward = function() {
+		console.log(this.tl.progress());
+		this.tl.progress(1);
+		this.container.hide();
+		if (this.cleanup) {
+			this.cleanup();
+		}
+	};
+	// When button PREV clicked/swipe up/scroll up. 
+	Scene.prototype.onBack = function(callback) {
+		console.log(this.tl.progress());
+		// this.tl.progress(0);
+		this.container.remove();
+		callback();
+	};
+	// When existing current scene.
+	Scene.prototype.onEnd = function() {
+		//this.container.remove();
+	};
     
+	anole.$$ = anole.getOrCreate;
+    anole.Scene = Scene;    
     return anole;
 });
