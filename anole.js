@@ -192,12 +192,11 @@
           return;
         }
         var src = this._config.resoureUrl + this._config.resource[res];
-		//console.log("loadOneResource: src: " + src);
         var error = function (){
           this.showError("Error loading "+src);
         }
         
-        if(/\.mp3|\.wav|\.ogg$/.test(src)){
+        if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm$/.test(src)){
           var media = new Audio(src);  
           media.src = src;
           this._resourceLoaded[res] = true;
