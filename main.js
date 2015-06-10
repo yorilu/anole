@@ -2,10 +2,11 @@
   baseUrl: './',
   paths: {
     'anole': 'anole',
-	  'demo': 'demo',
-    'hammer': 'hammer',
+	'demo': 'demo',
+	'hammer': 'hammer',
     'TweenLite': 'tween/TweenLite',
-    'TweenMax': 'tween/TweenMax'
+    'TweenMax': 'tween/TweenMax',
+    'Scene': 'scene/SCENE'
   },
   shim: {
     zepto: {
