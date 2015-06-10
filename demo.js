@@ -29,7 +29,7 @@
 	  "bubble_disappear": "bubble_disappear.png",
 	  "marco_nomouth": "marco_nomouth.png",
 	  "mouth": "mouth.png",
-      "dollar": "dollar.png",
+	  "dollar": "dollar.png",
 	  "dollar_big": "dollar_big.png",
 	  "dollar_top": "dollar_top.png",
 	  "dollar_mid": "dollar_mid.png",
@@ -56,12 +56,12 @@
 	  "searchbar":"searchbarwithshadow.png",
 	  "progbar":"progressbar.png",
 	  "nexus":"nexuswithshadow.png",
-    "chn_food":"chn_food.png",
-    "west_food":"west_food.png",
-    "lung_tab":"lung_tab.png",
-    "plate":"plate.png",
-    "lung_m":"lung_m.png",
-    "lung_f":"lung_f.png",
+	  "chn_food":"chn_food.png",
+	  "west_food":"west_food.png",
+	  "lung_tab":"lung_tab.png",
+	  "plate":"plate.png",
+	  "lung_m":"lung_m.png",
+	  "lung_f":"lung_f.png",
   }
   
   //if(!anole.isMobile()){
@@ -147,16 +147,15 @@
     anole.config({
       baseUrl:baseUrl,// root url 
       resoureUrl: resoureUrl,// resoure url like jpg/mp3
-      resource: resource,// resource
-      maxQueueLength: 4,// load serval scenes at same time
-      sceneQueue: sceneQueue,// anime scene queue
-      autoPlay: false,// auto play with no event
-      flipType: 'click',// flip type eg:click, swipe, wheel
-      containerTemplate: '<div class="container main"></div>',// scene root container, it will be appended to body.
-      prevBtnTemplate: '<div class="prev-btn btn J_PrevBtn">prev</div>',// prev button dom
-      nextBtnTemplate: '<div class="next-btn btn J_NextBtn">next</div>',// next button dom
-      startBtnTemplate: '<div class="start-btn btn J_StartBtn">start</div>', //start button dom
-	  showLoading: function (){ 
+      resource: resource,//resource
+      maxQueueLength: 10,//TODO load serval scenes at first
+      sceneQueue: sceneQueue,//anime scene queue
+      autoPlay: false,//auto play with no event
+      flipType: 'click',//flip type eg:click, swipe, wheel
+      containerTemplate: '<div class="container"></div>',//scene root container, it will be appended to body.
+      prevBtnTemplate: '<div class="prev-btn btn J_PrevBtn">prev</div>',//prev button dom
+      nextBtnTemplate: '<div class="next-btn btn J_NextBtn">next</div>',//next button dom
+      showLoading: function (){ 
         $(".mask").show();
         console.log("loading resource, show loading message.");
       }, 
