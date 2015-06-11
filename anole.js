@@ -165,6 +165,11 @@
         var nextScene = this._config.sceneQueue[sceneIndex];
         var fileName = nextScene.fileName;
         var res = nextScene.res || [];
+        
+        if(typeof this._sceneNameIndexMap[fileName] != 'undefined'){
+          return;
+        }
+        
         this._sceneNameIndexMap[fileName] = sceneIndex;
 
         if(this._currentScene == sceneIndex){
