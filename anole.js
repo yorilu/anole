@@ -153,7 +153,8 @@
         }
       },
       startAnime: function (){
-        this.playScene(0);
+		  this.canvas.empty();
+		  this.playScene(0);
       },
       _loadScene: function (sceneIndex){
         console.log("loadScene, index: " + sceneIndex +
