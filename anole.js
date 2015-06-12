@@ -32,6 +32,7 @@
           var nextBtn = this._nextBtn =  $(this._config.nextBtnTemplate);
           var startBtn = this._startBtn =  $(this._config.startBtnTemplate);
           $('body').append(prevBtn).append(nextBtn).append(startBtn);
+          $('body').append($('<audio src = "" controls="controls" autoplay="autoplay">Audio not suppoted</audio>'));
           prevBtn.on('click', playPrev);
           nextBtn.on('click', playNext);
           startBtn.on('click', startAnime);
@@ -214,9 +215,10 @@
         var src = this._config.resoureUrl + this._config.resource[res];
         var error = function (){
           this.showError("Error loading "+src);
-        }
-        
-        if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm|\.m4v|\.mov$/.test(src)){
+		  callback && callback(); // Load the next, WHATAVER!
+		}
+        // TODO: add loading handler for font files.
+        if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm|\.mov$/.test(src)){
           var media = new Audio(src);  
           media.src = src;
           this._resourceLoaded[res] = true;
@@ -290,6 +292,7 @@
         var scene = this._scene[index];
        
         scene.onInit && scene.onInit();//init scene
+        $("audio")[0].src = "./sound/"+scene.id+".mp3";
         if(this._config.autoPlay){     //autoplay
           scene.onStart && scene.onStart(function (){
             // auto play next scene if config.autoPlay is true
