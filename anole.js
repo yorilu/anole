@@ -211,7 +211,7 @@
           this.showError("Error loading "+src);
         }
         
-        if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm$/.test(src)){
+        if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm|\.m4v|\.mov$/.test(src)){
           var media = new Audio(src);  
           media.src = src;
           this._resourceLoaded[res] = true;
