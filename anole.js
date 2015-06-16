@@ -139,8 +139,6 @@
                     " Next scene to play: " + this._nextSceneIndexToPlay);
         this._scene[addedSceneIndex] = scene;
         if(addedSceneIndex==0){
-            console.log("addScene => playScene0");
-        //    this.playScene(0);
             return;
         }
 
@@ -286,24 +284,24 @@
         scene.onForward && scene.onForward();
       },
       playScene: function (index){
-          this._currentScene = index;
+		  this._currentScene = index;
 
-          console.log("---- PlayScene: " + index);
-        var scene = this._scene[index];
-       
-        scene.onInit && scene.onInit();//init scene
-        $("audio")[0].src = "./sound/"+scene.id+".mp3";
-        if(this._config.autoPlay){     //autoplay
-          scene.onStart && scene.onStart(function (){
-            // auto play next scene if config.autoPlay is true
-            console.log("Autoplay scene.onStart");
-            this.playNext();
-          }.bind(this));
-        }else{
-          scene.onStart && scene.onStart(function (){});
-        }
+		  console.log("---- PlayScene: " + index);
+		  var scene = this._scene[index];
 
-        this._loadScene(index + 1);//load next scene when playing current scene
+		  scene.onInit && scene.onInit();//init scene
+		  $("audio")[0].src = this._config.resoureUrl + "Sound/"+scene.id+".mp3";
+		  if(this._config.autoPlay){     //autoplay
+			  scene.onStart && scene.onStart(function (){
+				  // auto play next scene if config.autoPlay is true
+				  console.log("Autoplay scene.onStart");
+				  this.playNext();
+			  }.bind(this));
+		  }else{
+			  scene.onStart && scene.onStart(function (){});
+		  }
+
+		  this._loadScene(index + 1);//load next scene when playing current scene
       },
       getMusic: function (res){
         var music = musicList[res];
@@ -332,7 +330,7 @@
       this.name = 'scene'+id+'.js';
       this.canvas = canvas;
       this.inherit = inherit;
-      this.container = $("<div id='scene" + this.id + "' class='scene'></div>");
+      this.container;
       // List of dom elements that will be reused by other scenes afterwards.
       // Note it's DOM not jQ Objects.
       this.export = [];
@@ -343,6 +341,9 @@
     //
     // Public:
     Scene.prototype.onInit = function() {
+      // Must initialize the container everytime when entering the scene.
+	  // TODO: reuse scene content. 
+	  this.container = $("<div id='scene" + this.id + "' class='scene'></div>");
       // Empty current scene div.
       var old = this.canvas.find('#scene' + this.id);
       if (old) {
