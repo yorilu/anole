@@ -33,7 +33,6 @@
           var nextBtn = this._nextBtn =  $(this._config.nextBtnTemplate);
           var startBtn = this._startBtn =  $(this._config.startBtnTemplate);
           $('body').append(prevBtn).append(nextBtn).append(startBtn);
-          $('body').append($('<audio src="" controls="controls" autoplay="autoplay">Audio not suppoted</audio>'));
           prevBtn.on('click', playPrev);
           nextBtn.on('click', playNext);
           startBtn.on('click', startAnime);
@@ -292,10 +291,6 @@
         var scene = this._scene[index];
        
         scene.onInit && scene.onInit();//init scene
-        if(typeof scene.id != 'undefined'){
-          $("audio")[0].src = "./sound/"+scene.id+".mp3";
-        }
-        
         if(this._config.autoPlay){     //autoplay
           scene.onStart && scene.onStart(function (){
             // auto play next scene if config.autoPlay is true
