@@ -15,6 +15,13 @@
     onStart: function (finish){
       console.log("scene1 onStart");
       
+      var music = anole.getMusic("mymusic");
+      music.play();
+      
+      $(".J_Btn").on('click', function (){
+        anole.toggleAudioMusic(music);
+      });
+      
       var a = TweenMax.to(this.sp1, 0.5, {delay:0,top:380,onComplete: function (){
         
       }});

@@ -11,6 +11,7 @@
   
   var anole = window.anole = {
       _currentScene: 0,
+      _loadFirstFinish: false,
       _sceneNameIndexMap: {}, // mapping from scene js name to its index in the scene queue to play.
       _playedScene:0,
       _nextSceneIndexToPlay:-1, // the scene should play once loaded (added onto anole scene)
@@ -32,7 +33,7 @@
           var nextBtn = this._nextBtn =  $(this._config.nextBtnTemplate);
           var startBtn = this._startBtn =  $(this._config.startBtnTemplate);
           $('body').append(prevBtn).append(nextBtn).append(startBtn);
-          $('body').append($('<audio src = "" controls="controls" autoplay="autoplay">Audio not suppoted</audio>'));
+          $('body').append($('<audio src="" controls="controls" autoplay="autoplay">Audio not suppoted</audio>'));
           prevBtn.on('click', playPrev);
           nextBtn.on('click', playNext);
           startBtn.on('click', startAnime);
@@ -93,6 +94,7 @@
             if(this._loadedScene < this._config.maxQueueLength){
               this._loadScene(this._loadedScene);
             }else{
+              this._loadFirstFinish = true;
               this.hideLoading();
             }
           }
@@ -152,8 +154,8 @@
         }
       },
       startAnime: function (){
-		  this.canvas.empty();
-		  this.playScene(0);
+        this.canvas.empty();
+        this.playScene(0);
       },
       _loadScene: function (sceneIndex){
         console.log("loadScene, index: " + sceneIndex +
@@ -286,22 +288,29 @@
       playScene: function (index){
 		  this._currentScene = index;
 
-		  console.log("---- PlayScene: " + index);
-		  var scene = this._scene[index];
-
-		  scene.onInit && scene.onInit();//init scene
-		  $("audio")[0].src = this._config.resoureUrl + "Sound/"+scene.id+".mp3";
-		  if(this._config.autoPlay){     //autoplay
-			  scene.onStart && scene.onStart(function (){
-				  // auto play next scene if config.autoPlay is true
-				  console.log("Autoplay scene.onStart");
-				  this.playNext();
-			  }.bind(this));
-		  }else{
-			  scene.onStart && scene.onStart(function (){});
-		  }
-
-		  this._loadScene(index + 1);//load next scene when playing current scene
+        console.log("---- PlayScene: " + index);
+        var scene = this._scene[index];
+       
+        scene.onInit && scene.onInit();//init scene
+        if(typeof scene.id != 'undefined'){
+          $("audio")[0].src = "./sound/"+scene.id+".mp3";
+        }
+        
+        if(this._config.autoPlay){     //autoplay
+          scene.onStart && scene.onStart(function (){
+            // auto play next scene if config.autoPlay is true
+            console.log("Autoplay scene.onStart");
+            this.playNext();
+          }.bind(this));
+        }else{
+          scene.onStart && scene.onStart(function (){});
+        }
+        
+        if(this._loadFirstFinish){
+          this._loadScene(index + this._config.maxQueueLength);
+        }else{
+          this._loadScene(index + 1);//load next scene when playing current scene
+        }
       },
       getMusic: function (res){
         var music = musicList[res];
@@ -309,8 +318,12 @@
           return music
         }
       },
-      playVideo: function (){
-        //todo
+      toggleAudioMusic: function (audio){
+        if(audio.muted){
+          audio.muted = false;
+        }else{
+          audio.muted = true;
+        }
       },
       throttle: function(action, delay){
         var last = 0;
