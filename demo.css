@@ -71,16 +71,37 @@ html, body{
   background-color:#000;
   opacity:0.5;
   position:absolute;
-  top:100;
-  left:100;
+  top:0;
+  left:0;
   z-index: 100;
   color: #FFF;
   font-size: 72px;
 }
 .btn{
-  position: absolute;
   width:50px;
   height:50px;
   border:1px solid #000;
   display:inline-block;
+}
+.sprite{
+  width:50px;
+  height:50px;
+  border:1px solid #F00;
+  position:absolute;
+  background-size:100% 100%;
+}
+.sprite1{
+  background-image:url(resource/rs1.jpg);
+}
+.sprite2{
+  background-image:url(resource/rs2.jpg);
+}
+.sprite3{
+  background-image:url(resource/rs3.jpg);
+}
+.sprite4{
+  background-image:url(resource/rs4.jpg);
+}
+.sprite5{
+  background-image:url(resource/rs5.jpg);
 }
