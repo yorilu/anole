@@ -225,7 +225,7 @@
           media.preload = true;
           media.load();
           this._resourceLoaded[res] = true;
-          $(media).on("canplay load",function (e){
+          $(media).on("canplay",function (e){
             mediaList[res] = media;
             callback && callback();
           }).on("error",function (){
