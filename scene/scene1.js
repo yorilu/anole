@@ -15,7 +15,7 @@
     onStart: function (finish){
       console.log("scene1 onStart");
       
-      var music = anole.getMusic("mymusic");
+      var music = anole.getMedia("mymusic");
       music.play();
       
       $(".J_Btn").on('click', function (){

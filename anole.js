@@ -7,7 +7,7 @@
 // 2. for each scene: expose its timeline to make it easy to manage.
 
 ;define(['zepto', 'hammer'], function (zepto, Hammer){
-  var musicList = {};
+  var mediaList = {};
   
   var anole = window.anole = {
       _currentScene: 0,
@@ -224,7 +224,7 @@
           media.src = src;
           this._resourceLoaded[res] = true;
           $(media).on("canplay",function (e){
-            musicList[res] = media;
+            mediaList[res] = media;
             callback && callback();
           })
         }else{
@@ -309,8 +309,8 @@
           this._loadScene(index + 1);//load next scene when playing current scene
         }
       },
-      getMusic: function (res){
-        var music = musicList[res];
+      getMedia: function (res){
+        var music = mediaList[res];
         if(music){
           return music
         }
