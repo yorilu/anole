@@ -9,7 +9,7 @@
     "rs3": "rs3.jpg",
     "rs4": "rs4.jpg",
     "rs5": "rs5.jpg",
-    "mymusic": "a.mp3"
+    "mymusic": "a.music"
   }
   
   //if(!anole.isMobile()){
@@ -29,8 +29,8 @@
         fileName:'scene4.js'
       }
     ]
-    baseUrl = './scene/';
-    resoureUrl = "./resource/";
+    baseUrl = '/scene/';
+    resoureUrl = "/resource/";
   //}
   
   $(function (){
