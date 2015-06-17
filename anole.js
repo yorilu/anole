@@ -316,17 +316,17 @@
         }
       },
       isMuted: false,
-      playAudio: function (audio){
+      playMedia: function (media){
         if(this.isMuted){
-          audio.muted = true;
+          media.muted = true;
         }
-        audio.play();
+        media.play();
       },
-      toggleAudioMusic: function (audio){
-        if(audio.muted){
-          audio.muted = this.isMuted = false;
+      toggleAudioMusic: function (media){
+        if(media.muted){
+          media.muted = this.isMuted = false;
         }else{
-          audio.muted = this.isMuted =  true;
+          media.muted = this.isMuted =  true;
         }
       },
       throttle: function(action, delay){
