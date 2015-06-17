@@ -9,6 +9,24 @@
 ;define(['zepto', 'hammer'], function (zepto, Hammer){
   var mediaList = {};
   
+  var ua = navigator.userAgent;
+  var device = {
+    os: {
+      isAndroid: ua.indexOf('Android') > 0,
+      isIOS: /iP(ad|hone|od)/.test(ua)
+    },
+    browser: {
+      QQ: ua.indexOf('MQQBrowser') > 0,
+      UC: ua.indexOf('UCBrowser') > 0,
+      MIUI: ua.indexOf('MiuiBrowser') > 0,
+      WeiXin: ua.indexOf('MicroMessage') > 0,
+      Chrome: !!window.chrome,
+      Opera: /opera.([\d.]+)/i.test(ua),
+      Safari: /version\/([\d.]+)/i.test(ua),
+      FireFox: /firefox\/([\d.]+)/i.test(ua),
+      IE: /msie ([\d.]+)/i.test(ua)
+    }
+  }
   var anole = window.anole = {
       _currentScene: 0,
       _loadFirstFinish: false,
@@ -207,20 +225,21 @@
       },
       _loadOneResource: function (res, callback){
         
-      console.log('_loadOneResource: ' + res);
-        
+        console.log('_loadOneResource: ' + res);
         if(this._resourceLoaded[res]){
           callback && callback();
           return;
         }
-        var src = this._config.resoureUrl + this._config.resource[res];
-        var error = function (){
+          var src = this._config.resoureUrl + this._config.resource[res];
+          var error = function (){
           this.showError("Error loading "+src);
-		  callback && callback(); // Load the next, WHATAVER!
-		}
+          callback && callback(); // Load the next, WHATAVER!
+        }
         // TODO: add loading handler for font files.
-        if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm|\.mov$/.test(src)){
-          var media = new Audio(src);  
+        if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm|\.mov|\.music$/.test(src)){
+          src = this.transfer2Music(src);
+          
+          var media = new Audio(src);
           media.src = src;
           media.preload = true;
           media.load();
@@ -342,6 +361,20 @@
             last = curr;
           }
         };
+      },
+      transfer2Music: function (name){
+        if(/\.music$/.test(name)){
+          var db = device.browser;
+          var type;
+          if(db.Chrome || db.IE || db.Safari){
+            type = ".mp3";
+          }else{
+            type = ".wav";
+          }
+          return name.replace(".music", type)
+        }else{
+          return name;
+        }
       }
     };
     

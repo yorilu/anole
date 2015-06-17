@@ -9,7 +9,7 @@
     "rs3": "rs3.jpg",
     "rs4": "rs4.jpg",
     "rs5": "rs5.jpg",
-    "mymusic": "a.mp3"
+    "mymusic": "a.music"
   }
   
   //if(!anole.isMobile()){
