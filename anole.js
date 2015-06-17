@@ -371,7 +371,7 @@
 	  // All animations are trained by this main timeline.
       this.tl = new TimelineLite({paused:true});
       // Music file is registered as a resource.
-	  this.music = anole.getMusic(this.musicName);
+	  this.music = anole.getMedia(this.musicName);
 	}
     // Methods list.
     //
