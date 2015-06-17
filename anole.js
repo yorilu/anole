@@ -222,9 +222,13 @@
         if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm|\.mov$/.test(src)){
           var media = new Audio(src);  
           media.src = src;
+          media.preload = true;
+          media.load();
           this._resourceLoaded[res] = true;
-          $(media).on("canplay",function (e){
+          $(media).on("canplay load",function (e){
             mediaList[res] = media;
+            callback && callback();
+          }).on("error",function (){
             callback && callback();
           })
         }else{

@@ -18,9 +18,9 @@
       var music = anole.getMedia("mymusic");
       music.play();
       
-      $(".J_Btn").on('click', function (){
-        anole.toggleAudioMusic(music);
-      });
+      // $(".J_Btn").on('click', function (){
+        // anole.toggleAudioMusic(music);
+      // });
       
       var a = TweenMax.to(this.sp1, 0.5, {delay:0,top:380,onComplete: function (){
         

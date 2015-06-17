@@ -29,8 +29,8 @@
         fileName:'scene4.js'
       }
     ]
-    baseUrl = './scene/';
-    resoureUrl = "./resource/";
+    baseUrl = '/scene/';
+    resoureUrl = "/resource/";
   //}
   
   $(function (){
