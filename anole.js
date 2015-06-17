@@ -315,11 +315,18 @@
           return music
         }
       },
+      isMuted: false,
+      playAudio: function (audio){
+        if(this.isMuted){
+          audio.muted = true;
+        }
+        audio.play();
+      },
       toggleAudioMusic: function (audio){
         if(audio.muted){
-          audio.muted = false;
+          audio.muted = this.isMuted = false;
         }else{
-          audio.muted = true;
+          audio.muted = this.isMuted =  true;
         }
       },
       throttle: function(action, delay){
