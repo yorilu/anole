@@ -226,6 +226,7 @@
         if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm|\.mov$/.test(src)){
           var media = new Audio(src);  
           media.src = src;
+		  media.controls = false;
           this._resourceLoaded[res] = true;
           $(media).on("canplay",function (e){
             mediaList[res] = media;
@@ -313,21 +314,21 @@
         }
       },
       getMedia: function (res){
-        var music = mediaList[res];
-        if(music){
-          return music
+        var media = mediaList[res];
+        if(media){
+          return media
         }
       },
 	  // mute all audio that has been loaded.
 	  muteAll: function(){
-		for (var piece in musicList) {
-			musicList[piece].muted = true;
+		for (var piece in mediaList) {
+			mediaList[piece].muted = true;
 		}
 	  }, // TODO: Mute music that hasen't loaded.
 	  // Toggle all audio that has been loaded.
-	  toggleMusicAll: function(){
-		for (i=0; i<musicList.length; i++) {
-			toggleAudioMusic(musicList[i]);
+	  toggleMuteAll: function(){
+		for (i=0; i<mediaList.length; i++) {
+			toggleAudioMusic(mediaList[i]);
 		}
 	  },
       isMuted: false,
@@ -360,7 +361,7 @@
     function Scene(id, canvas, inherit) {
       this.id = id;
       this.name = 'scene' + id + '.js';
-      this.musicName = 'vo' + id;
+      this.musicName = 'vo' + id; // default voiceover file name.
 	  this.canvas = canvas;
       this.inherit = inherit;
       this.container;
@@ -416,7 +417,7 @@
 
     Scene.prototype.onStart = function(callback) {
       // Do animations here.
-	  this.music.play();
+	  anole.playMedia(this.music);
       this.animation();
       if (callback) {
         this.tl.call(callback);
@@ -428,7 +429,7 @@
       this.tl && this.tl.progress(1);
 	  if (this.music) {
 		this.music.pause();
-		// this.music.progess(0);
+        this.music.currentTime = 0;
 	  }
       this.container && this.container.hide();
       this.cleanup && this.cleanup();
@@ -437,7 +438,7 @@
     Scene.prototype.onBack = function(callback) {
 	  if (this.music) {
 		this.music.pause();
-		// this.music.progess(0);
+        this.music.currentTime = 0;
 	  }
       // this.tl.progress(0);
       this.container && this.container.remove();
