@@ -237,7 +237,7 @@
         }
         // TODO: add loading handler for font files.
         if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm|\.mov|\.music$/.test(src)){
-          src = this.transfer2Music(src);
+          src = this.transfer2Media(src);
           
           var media = new Audio(src);
           media.src = src;
@@ -362,7 +362,7 @@
           }
         };
       },
-      transfer2Music: function (name){
+      transfer2Media: function (name){
         if(/\.music$/.test(name)){
           var db = device.browser;
           var type;
