@@ -58,7 +58,6 @@
     
     anole.start();
   })
-  
   window.onerror = function (info){
     alert(info);
   }
