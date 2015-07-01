@@ -78,9 +78,9 @@
             var type = event.type;
             delta = (event.wheelDelta) ? event.wheelDelta / 120 : -(event.detail || 0) / 3;
             if(delta < 0){
-              this.playNext();
+              playNext();
             }else{
-              this.playPrev();
+              playPrev();
             }
           }.bind(this))
         }
@@ -250,10 +250,13 @@
           media.preload = true;
           media.load();
           this._resourceLoaded[res] = true;
+          var onCanPlay = 
           $(media).on("canplay",function (e){
             mediaList[res] = media;
             callback && callback();
+            $(this).unbind();
           }).on("error",function (){
+            $(this).unbind();
             callback && callback();
           })
         }else{
