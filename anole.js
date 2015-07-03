@@ -46,11 +46,11 @@
         var playPrev = this.throttle(this.playPrev.bind(this), 1000);
         var playNext = this.throttle(this.playNext.bind(this), 1000);
         var startAnime = this.throttle(this.startAnime.bind(this), 1000);
-	    var muteBtn =  this._config.muteBtnTemplate || 
+        var muteBtn =  this._config.muteBtnTemplate || 
 		    '<div class="mute-btn btn J_MuteBtn" value="MuteMusic">mute</div>';
-		this.muteBtn = $(muteBtn);
-		this.muteBtn.on('click', this.toggleMuteAll.bind(this));
-		this.muteBtn.appendTo('body');
+        this.muteBtn = $(muteBtn);
+        this.muteBtn.on('click', this.toggleMuteAll.bind(this));
+        this.muteBtn.appendTo('body');
 
         if(this._config.flipType == 'click'){
           var prevBtn = this._prevBtn = $(this._config.prevBtnTemplate);
@@ -64,12 +64,12 @@
           var hammer = new Hammer(_canvas[0]);
           hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
           hammer.on('swipe', function(ev) {
-              var d = ev.offsetDirection;
-              if(d == 2 || d == 8){
-                playPrev();
-              }else{
-                playNext();
-              }
+            var d = ev.offsetDirection;
+            if(d == 2 || d == 8){
+              playPrev();
+            }else{
+              playNext();
+            }
           }.bind(this));
         }else if(this._config.flipType == 'wheel'){
           $(document).bind('mousewheel DOMMouseScroll', function(event) {
@@ -132,7 +132,7 @@
           a[k]=v;
         })
       },
-	  // Returns a jQuery object instead of a dom node.
+      // Returns a jQuery object instead of a dom node.
       getOrCreate: function (query, tag, parent, style){
         var target;
 
@@ -243,10 +243,9 @@
         // TODO: add loading handler for font files.
         if(/\.mp3|\.wav|\.ogg|\.mp4|\.webm|\.mov|\.music$/.test(src)){
           src = this.transfer2Media(src);
-          
           var media = new Audio(src);
           media.src = src;
-		  media.controls = false;
+          media.controls = false;
           media.preload = true;
           media.load();
           this._resourceLoaded[res] = true;
@@ -319,7 +318,7 @@
         scene.onForward && scene.onForward();
       },
       playScene: function (index){
-		this._currentScene = index;
+        this._currentScene = index;
         console.log("---- PlayScene: " + index);
         var scene = this._scene[index];
        
@@ -365,15 +364,15 @@
       },
       // toggle all music state base on one media.
 	  toggleAudioMusic: function (media){
-        if (!media) { 
-			this.isMuted = !this.isMuted;
-		} else {
-			if(media.muted){
-				media.muted = this.isMuted = false;
-			} else {
-				media.muted = this.isMuted = true;
-			}
-		}
+      if (!media) { 
+        this.isMuted = !this.isMuted;
+      } else {
+        if(media.muted){
+          media.muted = this.isMuted = false;
+        } else {
+          media.muted = this.isMuted = true;
+        }
+      }
 	  },
       throttle: function(action, delay){
         var last = 0;
@@ -406,7 +405,7 @@
       this.id = id;
       this.name = 'scene' + id + '.js';
       this.musicName = 'vo' + id; // default voiceover file name.
-	  this.canvas = canvas;
+      this.canvas = canvas;
       this.inherit = inherit;
       this.container;
       // List of dom elements that will be reused by other scenes afterwards.
@@ -416,8 +415,8 @@
 	  // All animations are trained by this main timeline.
       this.tl = new TimelineLite({paused:true});
       // Music file is registered as a resource.
-	  this.music = anole.getMedia(this.musicName);
-	}
+      this.music = anole.getMedia(this.musicName);
+    }
     // Methods list.
     //
     // Public:
@@ -461,7 +460,7 @@
 
     Scene.prototype.onStart = function(callback) {
       // Do animations here.
-	  anole.playMedia(this.music);
+      this.music && anole.playMedia(this.music);
       this.animation();
       if (callback) {
         this.tl.call(callback);
@@ -471,18 +470,18 @@
     // When button NEXT clicked/swipe down/scroll down. 
     Scene.prototype.onForward = function() {
       this.tl && this.tl.progress(1);
-	  if (this.music) {
-		this.music.pause();
+      if (this.music) {
+        this.music.pause();
         this.music.currentTime = 0;
-	  }
+      }
       this.container && this.container.hide();
       this.cleanup && this.cleanup();
     };
     // When button PREV clicked/swipe up/scroll up. 
     Scene.prototype.onBack = function(callback) {
 	  if (this.music) {
-		this.music.pause();
-        this.music.currentTime = 0;
+      this.music.pause();
+      this.music.currentTime = 0;
 	  }
       // this.tl.progress(0);
       this.container && this.container.remove();

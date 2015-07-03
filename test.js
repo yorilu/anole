@@ -84,98 +84,15 @@
 	  "toilet_webm":"food2.webm",
 	  "gsvg":"g.svg",
 	  "googlelogo": "googlelogo.png",
+    "scene16cir": "scene16cir.jpg"
   }
   
   //if(!anole.isMobile()){
     sceneQueue = [
       {
         fileName:'scene1.js',
-        res: ["bridge","gate","boat","oar","marco1"] //depend resources.
-      },
-      {
-        fileName:'scene2.js',
-        res: ["gate","boat","oar","marco1","paperman",'marco2']
-      },
-      {
-        fileName:'scene3.js',
-        res: ["marco1","paperman","sub-block","sub-left-gate","sub-right-gate","font"]
-      },
-      {
-        fileName:'scene4.js',
-        res: ["marco1","paperman","sub-block","sub-left-gate","sub-right-gate"]
-      },
-      {
-        fileName:'scene5.js',
-        res: ["marco1","paperman","sub-block","sub-left-gate","sub-right-gate","replay"]
-      },
-      {
-        fileName:'scene6.js',
-        res: ["marco1","paperman","sub-block","sub-left-gate","sub-right-gate","replay","like"]
-      },
-      {
-        fileName:'scene7.js',
-        res: ["profile","youtube-logo","tag","board_video","v0","v1","v2","worry1", "worry2", "worry3", "worry4"]
-      },
-      {
-        fileName:'scene8.js',
-        res: ["bubble_disappear", "marco_nomouth", "mouth", "chinese", "chinese_smile"]
-      },
-      {
-        fileName:'scene9.js',
-        res: ["dollar", "dollar_big", "dollar_top", "dollar_mid", "dollar_bottom", "dollar_outer", "dollar_outer_big"]
-      },
-      {
-        fileName:'scene10.js',
-        res: ["shoppingbag"]
-      },
-      {
-        fileName:'scene11.js',
-        res: ["canadian0","canadian1","canadian2","KoreanR","KoreanG","KoreanB"]
-      },
-      {
-        fileName: 'scene12.js',
-        res: ["french","french_webm"]
-      },
-      {
-        fileName:'scene13.js',
-        res: ["gate","boat","marco2"]
-      },
-      {
-        fileName:'scene14.js',
-        res: ["map","mark1","mark2","mark3","mark4"]
-      },
-      {
-        fileName:'scene15.js',
-        res: ["map"]
-      },
-      {
-        fileName:'scene16.js',
-        res: ["browsertab","w1d","w1l","w2d","w2l","w3d","w3l","glogo","searchbar","progbar"]
-      },
-      {
-        fileName:'scene17.js',
-        res: ["browsertab","glogo","searchbar","progbar","nexus"]
-      },
-      {
-        fileName: 'scene18.js',
-        res: ["food1","food1_webm","food2","food2_webm","tag_blue","tag_yellow","tag_red"]
-      },
-      {
-        fileName:'scene19.js',
-        res: ["chn_food","west_food"]
-      },
-      {
-        fileName:'scene20.js',
-        res: ["lung_f","lung_m","lung_tab","plate"]
-      },
-      {
-        fileName: 'scene21.js',
-        res: ["toilet","toilet_webm"]
-      },
-      {
-        fileName: 'scene22.js',
-        res: ["gsvg", "googlelogo"]
-      },
+        res: ["scene16cir"] //depend resources.
+      }
     ]
     baseUrl = 'http://gtravel.b0.upaiyun.com/scene/';
     baseUrl = '/scene/';
@@ -185,63 +102,63 @@
   $(function (){
 	// Push voiceover files to sceneQueue.
     for (i=1; i<=sceneQueue.length; i++) {
-		resource['vo'+i] = 'Sound3/' + i + '.mp3';
-		(sceneQueue[i-1].res).push('vo'+i);
-	}
-	var config = {
-      baseUrl:baseUrl,// root url 
-      resoureUrl: resoureUrl,// resoure url like jpg/mp3
-      resource: resource,//resource
-      maxQueueLength: 3,//TODO load serval scenes at first
-      sceneQueue: sceneQueue,//anime scene queue
-      autoPlay: false,//auto play with no event
-      flipType: 'wheel',//flip type eg:click, swipe, wheel
-      containerTemplate: '<div class="container"></div>',//scene root container, it will be appended to body.
-      prevBtnTemplate: '<div class="prev-btn btn J_PrevBtn">prev</div>',//prev button dom
-      nextBtnTemplate: '<div class="next-btn btn J_NextBtn">next</div>',//next button dom
-      startBtnTemplate: '<div class="start-btn btn J_StartBtn">start</div>', //start button dom
-	  showLoading: function (){ 
-        $(".mask").show();
-        console.log("loading resource, show loading message.");
-      }, 
-      hideLoading: function (){
-        $(".mask").hide();
-        console.log("resource loaded, hide loading message.")
-      },
-	  showFirstLoading: function() {
-        $(".opening").show();
-        console.log("loading first several scenes, show opening animation.");
-	  },
-      hideFirstLoading: function (){
-        $(".opening").hide();
-        console.log("First batch of scencs loaded, hide opening animations.")
-      },
-      showError: function (msg){ console.log(msg); }
-    };
+      resource['vo'+i] = 'Sound3/' + i + '.mp3';
+      (sceneQueue[i-1].res).push('vo'+i);
+    }
+    var config = {
+        baseUrl:baseUrl,// root url 
+        resoureUrl: resoureUrl,// resoure url like jpg/mp3
+        resource: resource,//resource
+        maxQueueLength: 3,//TODO load serval scenes at first
+        sceneQueue: sceneQueue,//anime scene queue
+        autoPlay: false,//auto play with no event
+        flipType: 'wheel',//flip type eg:click, swipe, wheel
+        containerTemplate: '<div class="container"></div>',//scene root container, it will be appended to body.
+        prevBtnTemplate: '<div class="prev-btn btn J_PrevBtn">prev</div>',//prev button dom
+        nextBtnTemplate: '<div class="next-btn btn J_NextBtn">next</div>',//next button dom
+        startBtnTemplate: '<div class="start-btn btn J_StartBtn">start</div>', //start button dom
+        showLoading: function (){ 
+          $(".mask").show();
+          console.log("loading resource, show loading message.");
+        }, 
+        hideLoading: function (){
+          $(".mask").hide();
+          console.log("resource loaded, hide loading message.")
+        },
+        showFirstLoading: function() {
+            $(".opening").show();
+            console.log("loading first several scenes, show opening animation.");
+        },
+        hideFirstLoading: function (){
+          $(".opening").hide();
+          console.log("First batch of scencs loaded, hide opening animations.")
+        },
+        showError: function (msg){ console.log(msg); }
+      };
 
-    if(anole.isMobile()) {
-		config.flipType = 'swipe';
-		config.autoPlay = false;
-	}
-	/*
-	autoBtn.on('click', function(){
-		config.flipType = 'auto';
-		config.autoPlay = true;
-		anole.config(config);
-		anole.start();
-		autoBtn.hide();
-	});
-   */
-	anole.config(config);
+      if(anole.isMobile()) {
+        config.flipType = 'swipe';
+        config.autoPlay = false;
+      }
+    /*
+    autoBtn.on('click', function(){
+      config.flipType = 'auto';
+      config.autoPlay = true;
+      anole.config(config);
+      anole.start();
+      autoBtn.hide();
+    });
+     */
+    anole.config(config);
     anole.start();
     var window_w = document.body.clientWidth;
-	var canvas = anole.canvas;
+    var canvas = anole.canvas;
     var scene_w = canvas.width();
     var scene_h = canvas.height();
-	var loading = $('.mask');
-	var opening = $('.opening');
-	loading.appendTo(canvas);
-	opening.appendTo(canvas);
+    var loading = $('.mask');
+    var opening = $('.opening');
+    loading.appendTo(canvas);
+    opening.appendTo(canvas);
     var scale = window_w / scene_w + "";
     function getSupportedPropertyName() {
       var properties = ["transform", "msTransform", "webkitTransform", "mozTransform", "oTransform"];

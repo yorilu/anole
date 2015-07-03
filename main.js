@@ -5,7 +5,8 @@
     'demo': 'demo',
     'hammer': 'hammer',
     'TweenLite': 'tween/TweenLite',
-    'TweenMax': 'tween/TweenMax'
+    'TweenMax': 'tween/TweenMax',
+    'TimelineLite': 'tween/TimelineLite'
   },
   shim: {
     zepto: {

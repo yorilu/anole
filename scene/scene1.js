@@ -1,45 +1,31 @@
-;require(['anole', 'zepto', 'TweenLite', 'TweenMax'], function (anole, zepto, TweenLite, TweenMax){
-  
-  anole.addScene({
-    name: "scene1.js",
-    onInit: function (){
-      this.sp1 = anole.getOrCreate('.sprite1',function (){
-        return '<div class="sprite sprite1">';
-      }, anole.canvas, {left:30,top:-100});
-      this.sp2 = anole.getOrCreate('.sprite2','<div class="sprite sprite2">', anole.canvas, {left:120,top:-100});
-      this.sp3 = anole.getOrCreate('.sprite3','<div class="sprite sprite3">', anole.canvas, {left:240,top:-100});
-      this.sp4 = anole.getOrCreate('.sprite4','<div class="sprite sprite4">', anole.canvas, {left:310,top:-100});
-      this.sp5 = anole.getOrCreate('.sprite5','<div class="sprite sprite5">', anole.canvas, {left:410,top:-100});
-      console.log("scene1 onInit");
-    },
-    onStart: function (finish){
-      console.log("scene1 onStart");
+console.log("scene1.js running");
+;require(['anole', 'zepto', 'TweenMax','TimelineLite'], function (anole){
+	var scene = new anole.Scene(1, anole.canvas, false);
+	scene.createDom = function() {
+		if (!this.main){
+			this.container.find(".scene16").remove();
+			this.scene16 = anole.$$('.scene16','<div class="scene16"></div>', this.container);
       
-      var music = anole.getMedia("mymusic");
-      music.play();
-      
-      // $(".J_Btn").on('click', function (){
-        // anole.toggleAudioMusic(music);
-      // });
-      
-      var a = TweenMax.to(this.sp1, 0.5, {delay:0,top:380,onComplete: function (){
-        
-      }});
-      TweenMax.to(this.sp2, 0.5, {delay:0.2,top:210, onComplete: function (){
-        
-      }});
-      TweenMax.to(this.sp3, 0.8, {delay:0.5,top:430,onComplete: function (){
-        finish();
-      }});
-      TweenMax.to(this.sp4, 0.5, {delay:0.3,top:240, onComplete: function (){
-        
-      }});
-      TweenMax.to(this.sp5, 0.5, {delay:0,top:180, onComplete: function (){
-        
-      }});
-    },
-    onEnd: function (){
-      console.log("scene1 onEnd");
-    }
-  })
+      var html = '<div class="cir-div">'+
+                   '<div class="leftmask"></div>'+
+                   '<div class="rightcir"></div>'+
+                   '<div class="rightmask"></div>'+
+                 '</div>';
+                 
+      this.scene16.html(html);
+		}
+	}
+	scene.animation = function() {
+    var tl = new TimelineLite();
+	  tl.to('.rightmask', 1, {rotation:180,onComplete:function (){
+      $(this.target).hide();
+      $('.rightcir').css({"visibility":"visible"});
+    },ease:Power1.linear})
+    .to('.leftmask', 1, {rotation:180,ease:Power1.linear})
+    //a.play();
+		//.set(this.marco, {"z-index":501});
+	}
+	scene.cleanup = function() {
+	}
+	anole.addScene(scene);
 });

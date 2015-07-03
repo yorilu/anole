@@ -105,3 +105,44 @@ html, body{
 .sprite5{
   background-image:url(resource/rs5.jpg);
 }
+
+.scene16 .main{
+}
+
+.scene16 .cir-div{
+  width:147px;
+  height:147px;
+  background-image:url(resource/scene16cir.jpg);
+  overflow:hidden;
+  position:absolute;
+}
+
+.scene16 .rightcir{
+  width: 53px;
+  height: 147px;
+  background-image: url(resource/scene16cir.jpg);
+  background-position: -94px;
+  position: absolute;
+  top:0;
+  left: 94px;
+}
+
+.scene16 .leftmask{
+  height:167px;
+  width:124px;
+  background-color:#FFF;
+  position:relative;
+  left:-30px;
+  top:-10px;
+  transform-origin:124px 73.5px;
+}
+
+.scene16 .rightmask{
+  height:100%;
+  width:80px;
+  background-color:#FFF;
+  position:absolute;
+  top:0;
+  left:94px;
+  transform-origin:0 73.5px;
+}
