@@ -349,7 +349,7 @@ function(zepto, Hammer,TimelineLite) {
         var arr =[".mp4",".webm"];
         var mp4Src = src.replace(".video",".mp4");
         var webmSrc = src.replace(".video",".webm");
-        var html = '<video id="'+ res +'" width="800" height="374">'+
+        var html = '<video preload="load" id="'+ res +'" width="800" height="374">'+
                      '<source src="'+mp4Src+'" type="video/mp4" />'+
                      '<source src="'+webmSrc+'" type="video/webm" />'+
                    '</video>';
