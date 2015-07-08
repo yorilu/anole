@@ -1,0 +1,197 @@
+/* mixins */
+/* Common settings */
+#scene-1 {
+  z-index: 10; }
+
+#scene-2 {
+  z-index: 20; }
+
+#scene-3 {
+  z-index: 30; }
+
+#scene-4 {
+  z-index: 40; }
+
+#scene-5 {
+  z-index: 50; }
+
+#scene-6 {
+  z-index: 60; }
+
+#scene-7 {
+  z-index: 70; }
+
+#scene-8 {
+  z-index: 80; }
+
+#scene-9 {
+  z-index: 90; }
+
+#scene-10 {
+  z-index: 100; }
+
+#scene-11 {
+  z-index: 110; }
+
+#scene-12 {
+  z-index: 120; }
+
+#scene-13 {
+  z-index: 130; }
+
+#scene-14 {
+  z-index: 140; }
+
+#scene-15 {
+  z-index: 150; }
+
+#scene-16 {
+  z-index: 160; }
+
+#scene-17 {
+  z-index: 170; }
+
+#scene-18 {
+  z-index: 180; }
+
+#scene-19 {
+  z-index: 190; }
+
+#scene-20 {
+  z-index: 200; }
+
+#scene-21 {
+  z-index: 210; }
+
+#scene-22 {
+  z-index: 220; }
+
+#scene-23 {
+  z-index: 230; }
+
+#scene-24 {
+  z-index: 240; }
+
+#scene-25 {
+  z-index: 250; }
+
+#scene-26 {
+  z-index: 260; }
+
+#scene-27 {
+  z-index: 270; }
+
+#scene-28 {
+  z-index: 280; }
+
+#scene-29 {
+  z-index: 290; }
+
+#scene-30 {
+  z-index: 300; }
+
+.hide {
+  opacity: 0; }
+
+.display {
+  opacity: 1; }
+
+.close {
+  display: none; }
+
+.open {
+  display: block; }
+
+.center {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  margin: auto auto; }
+
+.origin {
+  -moz-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0); }
+
+.rot-10 {
+  -moz-transform: rotate(-10deg);
+  -o-transform: rotate(-10deg);
+  -ms-transform: rotate(-10deg);
+  -webkit-transform: rotate(-10deg);
+  transform: rotate(-10deg); }
+
+.z-top {
+  z-index: 999; }
+
+.y30 {
+  -moz-transform: translate3d(0, 30px, 0);
+  -o-transform: translate3d(0, 30px, 0);
+  -ms-transform: translate3d(0, 30px, 0);
+  -webkit-transform: translate3d(0, 30px, 0);
+  transform: translate3d(0, 30px, 0); }
+
+.wait,
+.active {
+  display: block; }
+
+.anime-short {
+  -webkit-transition: all 0.5s linear;
+  -moz-transition: all 0.5s linear;
+  -ms-transition: all 0.5s linear;
+  -o-transition: all 0.5s linear;
+  transition: all 0.5s linear; }
+
+.scale-3 {
+  -moz-transform: scale(0.33, 0.33);
+  -o-transform: scale(0.33, 0.33);
+  -ms-transform: scale(0.33, 0.33);
+  -webkit-transform: scale(0.33, 0.33);
+  transform: scale(0.33, 0.33); }
+
+.full-y {
+  top: 0px;
+  bottom: 0px; }
+
+.hidden {
+  display: none; }
+
+/* Copied from demo.css */
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre,
+form, fieldset, input, textarea, p, blockquote, th, td {
+  padding: 0;
+  margin: 0; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+fieldset, img {
+  border: 0; }
+
+address, caption, cite, code, dfn, em, strong, th, var {
+  font-weight: normal;
+  font-style: normal; }
+
+ol, ul {
+  list-style: none; }
+
+caption, th {
+  text-align: left; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+  font-size: 100%; }
+
+q:before, q:after {
+  content: ''; }
+
+abbr, acronym {
+  border: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%; }
+
+/*# sourceMappingURL=basic.css.map */

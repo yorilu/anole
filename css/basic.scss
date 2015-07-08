@@ -1,0 +1,162 @@
+/* mixins */
+@mixin transform($transforms) {
+	-moz-transform: $transforms;
+	-o-transform: $transforms;
+	-ms-transform: $transforms;
+	-webkit-transform: $transforms;
+	transform: $transforms;
+}
+// rotate
+@mixin rotate ($deg) {
+	@include transform(rotate(#{$deg}deg));
+}
+// scale
+@mixin scale($scaleX, $scaleY) {
+	@include transform(scale($scaleX, $scaleY));
+ } 
+ // translate
+ @mixin translate ($x, $y) {
+	 @include transform(translate($x, $y));
+}
+// translate3d
+@mixin translate3d ($x, $y, $z) {
+	@include transform(translate3d($x, $y, $z));
+}
+// transition
+@mixin transition($transition-property, $transition-time, $method) {
+	-webkit-transition: $transition-property $transition-time $method;
+	-moz-transition: $transition-property $transition-time $method;
+	-ms-transition: $transition-property $transition-time $method;
+	-o-transition: $transition-property $transition-time $method;
+	transition: $transition-property $transition-time $method;
+}
+// box-shadow
+@mixin box-shadow($top, $left, $blur, $spread, $color, $inset: false) {
+	@if $inset {
+		-webkit-box-shadow:inset $top $left $blur $spread $color;
+		-moz-box-shadow:inset $top $left $blur $spread $color;
+		box-shadow:inset $top $left $blur $spread $color;
+  } @else {
+	  -webkit-box-shadow: $top $left $blur $spread $color;
+	  -moz-box-shadow: $top $left $blur $spread $color;
+	  box-shadow: $top $left $blur $spread $color;
+  }
+}
+// Round corner.
+@mixin rounded($radius: 0.5em) {
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	border-radius: $radius;
+}
+// Gradient.
+@mixin gradient($from, $to) {
+	background: -webkit-gradient(linear, left top, left bottom, from($from), to($to));
+	background: -moz-linear-gradient(top,  $from, $to);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}');
+}
+
+@mixin repeating-linear-gradient($vars) {
+	background-image: -webkit-repeating-linear-gradient($vars);
+	background-image: -moz-repeating-linear-gradient($vars);
+	background-image: repeating-linear-gradient($vars);
+} 
+
+$resource_url: '../resource/';
+$sound_url: '../resource/Sound/';
+$video_url: '../resource/video/';
+
+@function image($name) {
+	@return url(#{$resource_url}#{$name});
+}
+/* Common settings */
+$max_scene_num: 30;
+// Set initial style for each scene layer.
+@for $id from 1 through $max_scene_num {
+	#scene-#{$id} {
+		z-index: $id*10;
+    }
+}
+.hide {
+  opacity: 0;
+}
+.display {
+  opacity: 1;
+}
+.close {
+  display: none;
+}
+.open {
+  display: block;
+}
+.center {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  margin: auto auto;
+}
+.origin {
+  @include translate3d(0, 0, 0);
+}
+.rot-10 {
+  @include rotate(-10);
+}
+.z-top {
+  z-index:999;
+}
+.y30 {
+  @include translate3d(0, 30px, 0);
+}
+.wait,
+.active {
+  display: block;
+}
+.anime-short {
+  @include transition(all, 0.5s, linear);
+}
+.scale-3 {
+  @include scale(0.33, 0.33);
+}
+.full-y {
+  top:0px;
+  bottom: 0px;
+}
+.hidden{
+  display:none;
+}
+/* Copied from demo.css */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,
+form,fieldset,input,textarea,p,blockquote,th,td {
+padding: 0;
+margin: 0;
+}
+table {
+border-collapse: collapse;
+border-spacing: 0;
+}
+fieldset,img {
+border: 0;
+}
+address,caption,cite,code,dfn,em,strong,th,var {
+font-weight: normal;
+font-style: normal;
+}
+ol,ul {
+list-style: none;
+}
+caption,th {
+text-align: left;
+}
+h1,h2,h3,h4,h5,h6 {
+font-weight: normal;
+font-size: 100%;
+}
+q:before,q:after {
+content:'';
+}
+abbr,acronym { border: 0;
+}
+
+html, body{
+	width:100%;
+	height:100%;
+}
