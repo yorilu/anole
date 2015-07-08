@@ -27,6 +27,15 @@ function(zepto, Hammer,TimelineLite) {
       IE: /msie ([\d.]+)/i.test(ua)
     }
   }
+  
+  
+  var _videoListDiv = $('<div id="anoleVideo">');
+  _videoListDiv.css({
+    position:'absolute',
+    left:-10000
+  })
+  $("body").append(_videoListDiv)
+  
   var anole = window.anole = {
     _currentScene: -1,
     _loadFirstFinish: false,
@@ -41,6 +50,7 @@ function(zepto, Hammer,TimelineLite) {
     // mapping from scene index to scene. If none, then the scene is not added onto the stage.
     canvas: null,
     _resourceLoaded: {},
+    _videoList:_videoListDiv,
     _init: function() {
       this.removeCanvas();
       var $canvas = $(this._config.containerTemplate);
@@ -310,8 +320,9 @@ function(zepto, Hammer,TimelineLite) {
         this.showError("Error loading " + src);
         callback && callback(); // Load the next, WHATAVER!
       }
+    
       // TODO: add loading handler for font files.
-      if (/\.mp3|\.wav|\.ogg|\.mp4|\.webm|\.mov|\.music$/.test(src)) {
+      if (/\.mp3|\.wav|\.ogg|\.music$/.test(src)) {
         src = this.transfer2Music(src);
 
         var media = new Audio(src);
@@ -324,11 +335,28 @@ function(zepto, Hammer,TimelineLite) {
         function(e) {
           mediaList[res] = media;
           callback && callback();
+          $(this).unbind();
         }).on("error",
         function() {
+          $(this).unbind();
           callback && callback();
         })
-      } else {
+      }else if (/\.video$/.test(src)){
+        var file = this._config.resource[res];
+        if(this._videoList.find("#"+res)[0]){
+          return ;
+        }
+        var arr =[".mp4",".webm"];
+        var mp4Src = src.replace(".video",".mp4");
+        var webmSrc = src.replace(".video",".webm");
+        var html = '<video id="'+ res +'" width="800" height="374">'+
+                     '<source src="'+mp4Src+'" type="video/mp4" />'+
+                     '<source src="'+webmSrc+'" type="video/webm" />'+
+                   '</video>';
+        var $html = $(html);
+        this._videoList.append($html);
+        callback && callback();
+      }else {
         var obj;
         obj = document.createElement("img");
         obj.src = src;
@@ -447,6 +475,10 @@ function(zepto, Hammer,TimelineLite) {
         return media
       }
     },
+    getVideo: function(res){
+      var video = this._videoList.find("#" + res);
+      return video[0];
+    },
     // mute all media.
     muteAll: function() {
       this.isMuted = true;
@@ -505,7 +537,6 @@ function(zepto, Hammer,TimelineLite) {
   if (hash.indexOf("#") != -1) {
 
     var index = parseInt(hash.substring(1));
-    debugger;
     var url = "/scene/" + "scene" + index + ".js";
     anole.getScript(url, index,
     function() {

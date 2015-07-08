@@ -84,13 +84,14 @@
 	  "toilet_webm":"food2.webm",
 	  "gsvg":"g.svg",
 	  "googlelogo": "googlelogo.png",
+    "video":"a.video"
   }
   
   //if(!anole.isMobile()){
     sceneQueue = [
       {
         fileName:'scene1.js',
-        res: [] //depend resources.
+        res: ["video"] //depend resources.
       },
       {
         fileName:'scene2.js',

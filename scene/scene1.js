@@ -35,6 +35,9 @@
 		}
 	}
 	scene.animation = function() {
+
+    var video = anole.getVideo("video");
+    
     var that = this;
     var tl = new TimelineLite();
     //TODO 半圆动画
